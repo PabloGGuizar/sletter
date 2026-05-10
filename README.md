@@ -1,3 +1,5 @@
+*Leer en otros idiomas: [Español](README.md), [English](README-en.md), [Français](README-fr.md)*
+
 # Sletter 🐍🔤
 
 Sletter es un juego educativo de navegador que combina las mecánicas del clásico **Snake** con el juego de formar palabras **Scrabble**. 
