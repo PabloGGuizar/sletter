@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sletter</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+<body class="fixed inset-0 flex items-center justify-center p-2 sm:p-4 bg-slate-50 dark:bg-[#0f172a] text-slate-900 dark:text-slate-50 overflow-hidden transition-colors duration-300">
+
+    <div class="w-full max-w-5xl h-full flex flex-col md:flex-row gap-2 sm:gap-6 items-center justify-center">
+        
+        <!-- Game Area (Auto-ajustable) -->
+        <div class="flex flex-col w-full shrink-0 relative max-w-[min(100%,_55vh)] md:max-w-[480px]">
+            <div class="w-full flex justify-between items-end mb-1 sm:mb-3 px-1">
+                <div>
+                    <h1 class="text-2xl sm:text-4xl font-extrabold leading-tight tracking-tight flex items-center">
+                        <span class="relative inline-block mr-[0.02em]">
+                            <span class="text-transparent bg-clip-text bg-gradient-to-br from-emerald-400 to-emerald-600">S</span>
+                            <span class="absolute top-[22%] right-[12%] w-[0.2em] h-[0.2em] bg-white rounded-full flex items-center justify-center shadow-sm pointer-events-none">
+                                <span class="w-[0.1em] h-[0.1em] bg-slate-900 rounded-full"></span>
+                            </span>
+                            <svg class="absolute top-[8%] -right-[20%] w-[0.35em] h-[0.35em] text-rose-500 -rotate-12 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M0 12h12l6 -6"></path>
+                                <path d="M12 12l6 6"></path>
+                            </svg>
+                        </span>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-cyan-500 dark:from-indigo-400 dark:to-cyan-400">letter</span>
+                    </h1>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] sm:text-sm text-slate-500 dark:text-slate-400 uppercase tracking-widest font-semibold">Puntos</p>
+                    <p class="text-2xl sm:text-4xl font-bold text-indigo-600 dark:text-indigo-400 leading-none" id="scoreDisplay">0</p>
+                </div>
+            </div>
+
+            <!-- Canvas Container -->
+            <div class="relative w-full aspect-square rounded-xl overflow-hidden border-2 sm:border-4 border-slate-300 dark:border-slate-700 shadow-2xl bg-white dark:bg-slate-800 transition-colors duration-300">
+                <canvas id="gameCanvas" width="480" height="480" class="w-full h-full block"></canvas>
+                
+                <!-- Start/Game Over Screen -->
+                <div id="overlay" class="absolute inset-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm flex flex-col items-center justify-center p-4 sm:p-6 text-center transition-opacity duration-300 z-10">
+                    <h2 id="overlayTitle" class="text-3xl sm:text-5xl font-extrabold text-slate-800 dark:text-white mb-2 tracking-tight flex items-center justify-center">
+                        <span class="relative inline-block mr-[0.02em]">
+                            <span class="text-transparent bg-clip-text bg-gradient-to-br from-emerald-400 to-emerald-600">S</span>
+                            <span class="absolute top-[22%] right-[12%] w-[0.2em] h-[0.2em] bg-white rounded-full flex items-center justify-center shadow-sm pointer-events-none">
+                                <span class="w-[0.1em] h-[0.1em] bg-slate-900 rounded-full"></span>
+                            </span>
+                            <svg class="absolute top-[8%] -right-[20%] w-[0.35em] h-[0.35em] text-rose-500 -rotate-12 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M0 12h12l6 -6"></path>
+                                <path d="M12 12l6 6"></path>
+                            </svg>
+                        </span>
+                        <span>letter</span>
+                    </h2>
+
+                    <p id="overlayMessage" class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-4 sm:mb-6 max-w-sm">
+                        Solo se validan las palabras unidas a tu <strong>Cola</strong>. Si comes una letra equivocada, bloqueará tu palabra.
+                    </p>
+                    
+                    <div id="aliasContainer" class="hidden flex-col items-center mb-4 sm:mb-6">
+                        <label for="aliasInput" class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-bold uppercase mb-1">Tu Alias</label>
+                        <div class="flex flex-wrap justify-center gap-2">
+                            <input type="text" id="aliasInput" maxlength="10" placeholder="Anónimo" class="px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-32 text-center font-bold">
+                            <div class="flex gap-1">
+                                <button id="saveAliasBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-3 sm:px-4 rounded-lg shadow-md transition text-sm">Guardar</button>
+                                <button id="skipAliasBtn" class="bg-slate-500 hover:bg-slate-400 text-white font-bold py-2 px-3 sm:px-4 rounded-lg shadow-md transition text-sm">Omitir</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="startBtn" disabled class="opacity-50 cursor-not-allowed bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-bold py-2 px-6 sm:py-3 sm:px-8 rounded-full shadow-lg transform transition text-base sm:text-lg">
+                        Cargando diccionario...
+                    </button>
+                    <div class="mt-4 flex flex-wrap justify-center gap-2 sm:gap-4 text-slate-500 dark:text-slate-400 text-[10px] sm:text-xs">
+                        <span class="flex items-center gap-1"><kbd class="bg-slate-200 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300">Flechas</kbd> <span id="lblMove">Moverse</span></span>
+                        <span class="flex items-center gap-1"><kbd class="bg-slate-200 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300">Espacio</kbd> <span id="lblSubmit">Validar</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Side / Bottom Panel -->
+        <div class="w-full md:w-80 flex flex-col gap-2 sm:gap-3 flex-1 min-h-0 max-w-[min(100%,_55vh)] md:max-w-none">
+            
+            <!-- Controls (Lang, Theme, Help) -->
+            <div class="flex justify-between items-center shrink-0">
+                <div class="flex gap-1 bg-white dark:bg-slate-800 p-1 rounded-lg border border-slate-300 dark:border-slate-700 shadow-sm transition-colors duration-300">
+                    <select id="langSelect" class="bg-transparent text-slate-700 dark:text-slate-300 font-bold text-sm outline-none px-2 py-1">
+                        <option value="es">ES</option>
+                        <option value="en">EN</option>
+                        <option value="fr">FR</option>
+                    </select>
+                </div>
+                <div class="flex gap-1 sm:gap-2">
+                    <button id="muteToggleBtn" class="p-1.5 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg border border-slate-300 dark:border-slate-700 shadow-sm transition-colors duration-300" aria-label="Toggle Sound">
+                        <!-- Sound On -->
+                        <svg id="iconSoundOn" class="w-5 h-5 block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path></svg>
+                        <!-- Sound Off -->
+                        <svg id="iconSoundOff" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z m10-4.5l-6 6m0-6l6 6"></path></svg>
+                    </button>
+                    <button id="themeToggleBtn" class="p-1.5 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg border border-slate-300 dark:border-slate-700 shadow-sm transition-colors duration-300" aria-label="Toggle Theme">
+                        <!-- Sun Icon (Hidden in Dark Mode initially) -->
+                        <svg id="iconSun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <!-- Moon Icon (Hidden in Light Mode initially) -->
+                        <svg id="iconMoon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                    <button id="helpBtn" class="p-1.5 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg border border-slate-300 dark:border-slate-700 shadow-sm transition-colors duration-300" aria-label="Help">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Current Word -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-3 sm:p-4 border border-slate-300 dark:border-slate-700 shadow-lg shrink-0 transition-colors duration-300">
+                <h3 id="lblOrder" class="text-[10px] sm:text-sm text-slate-500 dark:text-slate-400 uppercase tracking-widest font-semibold mb-1">Orden de Letras Comidas</h3>
+                <div id="lblHeadTail" class="text-[9px] sm:text-[10px] text-slate-400 dark:text-slate-500 mb-2 flex justify-between font-medium">
+                    <span>(Cabeza / Antigua)</span> <span>(Cola / Reciente)</span>
+                </div>
+                <div id="currentLetters" class="flex flex-wrap gap-1 sm:gap-2 min-h-[2.5rem] items-center overflow-hidden mb-2">
+                    <span id="lblEatTiles" class="text-slate-400 dark:text-slate-500 text-xs italic w-full text-center mt-1">Come fichas...</span>
+                </div>
+                
+                <button id="submitWordBtn" class="w-full mt-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transform transition active:scale-95 flex justify-center items-center gap-2 text-sm sm:text-base border border-indigo-500">
+                    <span id="lblSubmitBtn">Validar Palabra</span>
+                    <kbd class="hidden sm:inline-block bg-indigo-800 text-[10px] px-1.5 py-0.5 rounded border border-indigo-400">Espacio</kbd>
+                </button>
+            </div>
+
+            <!-- Found Words -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-3 sm:p-4 border border-slate-300 dark:border-slate-700 shadow-lg flex-1 flex flex-col min-h-0 transition-colors duration-300">
+                <div class="flex justify-between items-center shrink-0 mb-2">
+                    <h3 id="lblFound" class="text-[10px] sm:text-sm text-slate-500 dark:text-slate-400 uppercase tracking-widest font-semibold">Palabras Formadas</h3>
+                </div>
+                <div id="wordsList" class="flex-1 overflow-y-auto scrollbar-hide flex flex-col gap-1 sm:gap-2 pr-1 min-h-[50px]">
+                    <span id="lblNoWords" class="text-slate-400 dark:text-slate-500 text-xs italic text-center mt-2">Ninguna palabra aún</span>
+                </div>
+            </div>
+            
+            <!-- Local Records -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-2 sm:p-3 border border-slate-300 dark:border-slate-700 shadow-lg flex flex-col shrink-0 transition-colors duration-300">
+                <div class="flex justify-between items-center shrink-0 mb-1">
+                    <h3 id="lblRecordsTitle" class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 uppercase tracking-widest font-semibold">Top Récords Locales</h3>
+                    <button id="clearRecordsBtn" class="p-1 text-slate-400 hover:text-rose-500 transition-colors" title="Borrar Récords">
+                        <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
+                <div id="recordsList" class="flex flex-col gap-1">
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="shrink-0 text-center text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 pt-1">
+                <p id="lblFooter">Creado por <a href='https://www.linkedin.com/in/pablogguizar/' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>Pablo G. Guízar</a>. Código fuente en <a href='https://github.com/PabloGGuizar/sletter' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>GitHub</a>.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex-col items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 max-w-md w-full relative shadow-2xl border border-slate-300 dark:border-slate-700 transition-colors duration-300">
+            <button id="closeHelpBtn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h2 id="lblHelpTitle" class="text-xl font-extrabold mb-4 text-indigo-600 dark:text-indigo-400 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Instrucciones
+            </h2>
+            <div id="lblHelpText" class="text-sm text-slate-600 dark:text-slate-300 space-y-3 font-medium">
+                <!-- Inyectado via JS -->
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./js/main.js"></script>
+</body>
+</html>

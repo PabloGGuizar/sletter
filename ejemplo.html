@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sletter</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            touch-action: none; /* Evita scroll en móviles al deslizar */
+        }
+        
+        #gameCanvas {
+            image-rendering: pixelated;
+            width: 100%;
+            max-width: 480px;
+            aspect-ratio: 1 / 1;
+            display: block;
+        }
+
+        .tile {
+            background: linear-gradient(135deg, #818cf8, #4f46e5);
+            color: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.3);
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="fixed inset-0 flex items-center justify-center p-2 sm:p-4 bg-slate-50 dark:bg-[#0f172a] text-slate-900 dark:text-slate-50 overflow-hidden transition-colors duration-300">
+
+    <div class="w-full max-w-5xl h-full flex flex-col md:flex-row gap-2 sm:gap-6 items-center justify-center">
+        
+        <!-- Game Area (Auto-ajustable) -->
+        <div class="flex flex-col w-full shrink-0 relative max-w-[min(100%,_55vh)] md:max-w-[480px]">
+            <div class="w-full flex justify-between items-end mb-1 sm:mb-3 px-1">
+                <div>
+                    <h1 class="text-2xl sm:text-4xl font-extrabold leading-tight tracking-tight flex items-center">
+                        <span class="relative inline-block mr-[0.02em]">
+                            <span class="text-transparent bg-clip-text bg-gradient-to-br from-emerald-400 to-emerald-600">S</span>
+                            <span class="absolute top-[22%] right-[12%] w-[0.2em] h-[0.2em] bg-white rounded-full flex items-center justify-center shadow-sm pointer-events-none">
+                                <span class="w-[0.1em] h-[0.1em] bg-slate-900 rounded-full"></span>
+                            </span>
+                            <svg class="absolute top-[8%] -right-[20%] w-[0.35em] h-[0.35em] text-rose-500 -rotate-12 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M0 12h12l6 -6"></path>
+                                <path d="M12 12l6 6"></path>
+                            </svg>
+                        </span>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-cyan-500 dark:from-indigo-400 dark:to-cyan-400">letter</span>
+                    </h1>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] sm:text-sm text-slate-500 dark:text-slate-400 uppercase tracking-widest font-semibold">Puntos</p>
+                    <p class="text-2xl sm:text-4xl font-bold text-indigo-600 dark:text-indigo-400 leading-none" id="scoreDisplay">0</p>
+                </div>
+            </div>
+
+            <!-- Canvas Container -->
+            <div class="relative w-full aspect-square rounded-xl overflow-hidden border-2 sm:border-4 border-slate-300 dark:border-slate-700 shadow-2xl bg-white dark:bg-slate-800 transition-colors duration-300">
+                <canvas id="gameCanvas" width="480" height="480" class="w-full h-full block"></canvas>
+                
+                <!-- Start/Game Over Screen -->
+                <div id="overlay" class="absolute inset-0 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm flex flex-col items-center justify-center p-4 sm:p-6 text-center transition-opacity duration-300 z-10">
+                    <h2 id="overlayTitle" class="text-3xl sm:text-5xl font-extrabold text-slate-800 dark:text-white mb-2 tracking-tight flex items-center justify-center">
+                        <span class="relative inline-block mr-[0.02em]">
+                            <span class="text-transparent bg-clip-text bg-gradient-to-br from-emerald-400 to-emerald-600">S</span>
+                            <span class="absolute top-[22%] right-[12%] w-[0.2em] h-[0.2em] bg-white rounded-full flex items-center justify-center shadow-sm pointer-events-none">
+                                <span class="w-[0.1em] h-[0.1em] bg-slate-900 rounded-full"></span>
+                            </span>
+                            <svg class="absolute top-[8%] -right-[20%] w-[0.35em] h-[0.35em] text-rose-500 -rotate-12 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M0 12h12l6 -6"></path>
+                                <path d="M12 12l6 6"></path>
+                            </svg>
+                        </span>
+                        <span>letter</span>
+                    </h2>
+
+                    <p id="overlayMessage" class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mb-4 sm:mb-6 max-w-sm">
+                        Solo se validan las palabras unidas a tu <strong>Cola</strong>. Si comes una letra equivocada, bloqueará tu palabra. <strong>Multiplicadores (x2 L, x3 P)</strong> aplicarán si tus letras están sobre ellos al validar.
+                    </p>
+                    <button id="startBtn" disabled class="opacity-50 cursor-not-allowed bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-bold py-2 px-6 sm:py-3 sm:px-8 rounded-full shadow-lg transform transition text-base sm:text-lg">
+                        Cargando diccionario...
+                    </button>
+                    <div class="mt-4 flex flex-wrap justify-center gap-2 sm:gap-4 text-slate-500 dark:text-slate-400 text-[10px] sm:text-xs">
+                        <span class="flex items-center gap-1"><kbd class="bg-slate-200 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300">Flechas</kbd> <span id="lblMove">Moverse</span></span>
+                        <span class="flex items-center gap-1"><kbd class="bg-slate-200 dark:bg-slate-800 px-1.5 py-0.5 rounded border border-slate-300 dark:border-slate-700 text-slate-700 dark:text-slate-300">Espacio</kbd> <span id="lblSubmit">Validar</span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Side / Bottom Panel -->
+        <div class="w-full md:w-80 flex flex-col gap-2 sm:gap-3 flex-1 min-h-0 max-w-[min(100%,_55vh)] md:max-w-none">
+            
+            <!-- Controls (Lang, Theme, Help) -->
+            <div class="flex justify-between items-center shrink-0">
+                <div class="flex gap-1 bg-white dark:bg-slate-800 p-1 rounded-lg border border-slate-300 dark:border-slate-700 shadow-sm transition-colors duration-300">
+                    <button id="langEsBtn" class="px-3 py-1 rounded-md bg-indigo-600 text-white font-bold text-xs transition">ES</button>
+                    <button id="langEnBtn" class="px-3 py-1 rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white font-bold text-xs transition">EN</button>
+                </div>
+                <div class="flex gap-2">
+                    <button id="themeToggleBtn" class="p-1.5 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg border border-slate-300 dark:border-slate-700 shadow-sm transition-colors duration-300" aria-label="Toggle Theme">
+                        <!-- Sun Icon (Hidden in Dark Mode initially) -->
+                        <svg id="iconSun" class="w-5 h-5 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                        <!-- Moon Icon (Hidden in Light Mode initially) -->
+                        <svg id="iconMoon" class="w-5 h-5 block dark:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                    </button>
+                    <button id="helpBtn" class="p-1.5 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 rounded-lg border border-slate-300 dark:border-slate-700 shadow-sm transition-colors duration-300" aria-label="Help">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Current Word -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-3 sm:p-4 border border-slate-300 dark:border-slate-700 shadow-lg shrink-0 transition-colors duration-300">
+                <h3 id="lblOrder" class="text-[10px] sm:text-sm text-slate-500 dark:text-slate-400 uppercase tracking-widest font-semibold mb-1">Orden de Letras Comidas</h3>
+                <div id="lblHeadTail" class="text-[9px] sm:text-[10px] text-slate-400 dark:text-slate-500 mb-2 flex justify-between font-medium">
+                    <span>(Cabeza / Antigua)</span> <span>(Cola / Reciente)</span>
+                </div>
+                <div id="currentLetters" class="flex flex-wrap gap-1 sm:gap-2 min-h-[2.5rem] items-center overflow-hidden mb-2">
+                    <span id="lblEatTiles" class="text-slate-400 dark:text-slate-500 text-xs italic w-full text-center mt-1">Come fichas...</span>
+                </div>
+                
+                <button id="submitWordBtn" class="w-full mt-1 bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg shadow-md transform transition active:scale-95 flex justify-center items-center gap-2 text-sm sm:text-base border border-indigo-500">
+                    <span id="lblSubmitBtn">Validar Palabra</span>
+                    <kbd class="hidden sm:inline-block bg-indigo-800 text-[10px] px-1.5 py-0.5 rounded border border-indigo-400">Espacio</kbd>
+                </button>
+            </div>
+
+            <!-- Found Words -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-3 sm:p-4 border border-slate-300 dark:border-slate-700 shadow-lg flex-1 flex flex-col min-h-0 transition-colors duration-300">
+                <h3 id="lblFound" class="text-[10px] sm:text-sm text-slate-500 dark:text-slate-400 uppercase tracking-widest font-semibold mb-2 shrink-0">Palabras Formadas</h3>
+                <div id="wordsList" class="flex-1 overflow-y-auto scrollbar-hide flex flex-col gap-1 sm:gap-2 pr-1 min-h-[100px]">
+                    <span id="lblNoWords" class="text-slate-400 dark:text-slate-500 text-xs italic text-center mt-2">Ninguna palabra aún</span>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="shrink-0 text-center text-[9px] sm:text-[10px] text-slate-500 dark:text-slate-400 pt-1">
+                <p id="lblFooter">Prototipo bajo licencia MIT. Código generado en Gemini por Pablo G. Guízar.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex-col items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 max-w-md w-full relative shadow-2xl border border-slate-300 dark:border-slate-700 transition-colors duration-300">
+            <button id="closeHelpBtn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h2 id="lblHelpTitle" class="text-xl font-extrabold mb-4 text-indigo-600 dark:text-indigo-400 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                Instrucciones
+            </h2>
+            <div id="lblHelpText" class="text-sm text-slate-600 dark:text-slate-300 space-y-3 font-medium">
+                <!-- Inyectado via JS -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- THEME TOGGLE ---
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const htmlDoc = document.documentElement;
+        
+        themeToggleBtn.addEventListener('click', () => {
+            htmlDoc.classList.toggle('dark');
+            drawGame(); // Refrescar colores del canvas inmediatamente
+        });
+
+        // --- HELP MODAL ---
+        const helpModal = document.getElementById('helpModal');
+        const helpBtn = document.getElementById('helpBtn');
+        const closeHelpBtn = document.getElementById('closeHelpBtn');
+
+        helpBtn.addEventListener('click', () => {
+            helpModal.classList.remove('hidden');
+            helpModal.classList.add('flex');
+        });
+        
+        const closeModal = () => {
+            helpModal.classList.add('hidden');
+            helpModal.classList.remove('flex');
+        };
+        closeHelpBtn.addEventListener('click', closeModal);
+        helpModal.addEventListener('click', (e) => { if(e.target === helpModal) closeModal(); });
+
+        // --- 1. CONFIGURACIÓN Y DICCIONARIO ---
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const GRID_SIZE = 20; 
+        const CELL_SIZE = 24; 
+        
+        const langData = {
+            es: {
+                url: 'https://cdn.jsdelivr.net/npm/an-array-of-spanish-words/index.json',
+                fallback: "SODA ODA ROL LEY REY QUE LOS DEL POR LAS CON UNA SUS SER SON DOS ASI MAS MUY SIN SOBRE TAMBIEN ESTA HAY ESTE FUE HAN ESTO TIENE AQUI ESTAN COMO SOLO TODOS CUANDO TIENEN TODAS TODO ESTABA ESTOS DONDE ESTAMOS PUEDE TIEMPO PARTE VIDA CADA OTROS MISMO HASTA OTRO SIEMPRE DIA AÑOS GRANDE AHORA TRES COSAS AÑO ANTES LUGAR BIEN POCO MUNDO LUEGO OTROS MUCHOS MUCHO ENTRE VER NADA DECIR ELLA ESTADO QUIEN HACER NUEVO MEJOR FORMA ESTAS CASO ESE PODER ELLOS OTRA VECES ALGO PAIS MISMA FORMAS SEGUIR QUERER AGUA MADRE HOMBRE CASA MUJER DIAS DIJO PARTE GENTE LLEGAR QUEDAR PADRE COSA CIERTO VERDAD QUIERE FINAL TOMAR POCO PASAR TRABAJO MANOS LADO NUEVA QUIEN NUNCA PASO IGUAL MENOS TRABAJAR SIENDO DAR GRUPO MANERA AUNQUE HOY HECHO PENSAR PUNTO ESTABAN ELLO LUGAR TENIA HABER CUAL SABER OJO LUZ MAYOR PERO PERRO GATO LEON TIGRE OSO VACA TORO PEZ AVE PAJARO RATA RATON CERDO OVEJA CABALLO PATO ROJO AZUL VERDE NEGRO BLANCO ROSA AMARILLO GRIS MARRON MESA SILLA CAMA PUERTA VENTANA VASO PLATO COCHE AUTO TREN AVION BARCO ROPA ZAPATO RELOJ GAFAS SOL LUNA CIELO NUBE LLUVIA NIEVE MAR RIO LAGO ARBOL FLOR HOJA PIEDRA ARENA FUEGO TIERRA MANO PIE BRAZO PIERNA CABEZA BOCA NARIZ OREJA PELO DEDO CARA CUERPO ALMA MENTE CORAZON AMOR ODIO RISA LLANTO FELIZ TRISTE ENOJO MIEDO SALUD ENFERMO RICO POBRE CARO BARATO ALTO BAJO LARGO CORTO ANCHO ESTRECHO FUERTE DEBIL JOVEN VIEJO NUEVO LENTO RAPIDO DULCE SALADO AMARGO CALIENTE FRIO TIBIO DURO BLANDO FACIL DIFICIL LIBRE PRESO BUENO MALO LINDO FEO HERMOSO BONITO HORRIBLE JUGAR SALTAR CORRER DORMIR COMER BEBER HABLAR CANTAR BAILAR REIR LLORAR ESTUDIAR LEER ESCRIBIR CONTAR SUMAR RESTAR MULTIPLICAR DIVIDIR GANAR PERDER COMPRAR VENDER PAGAR COBRAR ROBAR REGALAR ABRIR CERRAR SUBIR BAJAR ENTRAR SALIR NACER MORIR VIVIR MATAR SALVAR ROMPER ARREGLAR CORTAR PEGAR BUSCAR ENCONTRAR PERDER ESCONDER MOSTRAR OCULTAR CAER LEVANTAR SENTAR ACOSTAR VOLAR NADAR CAMINAR PASEAR VIAJAR LLEVAR TRAER ENVIAR RECIBIR PEDIR DAR TOMAR DEJAR PONER QUITAR CAJA PAPEL LAPIZ LIBRO LETRA NUMERO PALABRA FRASE TEXTO CUENTO HISTORIA FOTO IMAGEN JUEGO JUGUETE PELOTA MUÑECA REY REINA PRINCIPE PRINCESA CASTILLO ESPADA ESCUDO ARCO FLECHA MAGIA BRUJA DUENDE HADA DIOS CIELO INFIERNO LUZ OSCURIDAD SOMBRA DIA NOCHE MAÑANA TARDE MADRUGADA HORA MINUTO SEGUNDO SEMANA MES AÑO SIGLO MILENIO LUNES MARTES MIERCOLES JUEVES VIERNES SABADO DOMINGO ENERO FEBRERO MARZO ABRIL MAYO JUNIO JULIO AGOSTO SEPTIEMBRE OCTUBRE NOVIEMBRE DICIEMBRE NORTE SUR ESTE OESTE DERECHA IZQUIERDA ARRIBA ABAJO CENTRO MEDIO FONDO FRENTE ATRAS CERCA LEJOS AQUI ALLI ALLA ACA FUERA DENTRO DENTRO FUERA ENCIMA DEBAJO ADELANTE ATRA CON CONTRA DE DESDE EN ENTRE HACIA HASTA PARA POR SEGUN SIN SOBRE TRAS YO TU EL NOSOTROS VOSOTROS ELLOS MI TI SI ME TE SE NOS OS LE LES LO LA LOS LAS MIO TUYO SUYO NUESTRO VUESTRO UNO PRIMERO SEGUNDO TERCERO CUARTO QUINTO SEXTO SEPTIMO OCTAVO NOVENO DECIMO ONCE DOCE DOCENA CIEN CIENTO MIL MILLON MITAD DOBLE TRIPLE CUADRUPLE BASTANTE DEMASIADO SUFICIENTE ESCASO NINGUN ALGUN CUALQUIER AMBOS VARIOS DEMAS QUIEN CUAL CUANTO DONDE CUANDO COMO PORQUE OSEA SINO AUN INCLUSO ADEMAS TAMPOCO CASI APENAS SOLAMENTE UNICAMENTE PRECISAMENTE VERDADERAMENTE REALMENTE SEGURAMENTE PROBABLEMENTE QUIZA ACASO OJALA HOLA ADIOS GRACIAS FAVOR PERDON DISCULPA CLARO BUENO VALE BASTA AMIGO ENEMIGO COMPAÑERO VECINO JEFE EMPLEADO MAESTRO ALUMNO MEDICO PACIENTE POLICIA LADRON JUEZ ABOGADO LEY NORMA REGLA ORDEN CAOS PAZ GUERRA ARMA BOMBA TIRO BALA HERIDA SANGRE DOLOR CURA MEDICINA VENENO DROGA ALCOHOL VINO CERVEZA AGUA LECHE JUGO TE CAFE QUESO PAN CARNE PESCADO POLLO HUEVO FRUTA VERDURA SAL AZUCAR ACEITE VINAGRE ARROZ PASTA SOPA ENSALADA POSTRE HELADO PASTEL GALLETA CHOCOLATE CARAMELO CINE TEATRO MUSICA ARTE PINTURA ESCULTURA FOTOGRAFIA CIENCIA HISTORIA MATEMATICA FILOSOFIA RELIGION POLITICA ECONOMIA DEPORTE FUTBOL BALONCESTO TENIS NATACION ATLETISMO CARRERA SALTO LANZAMIENTO EQUIPO PARTIDO CAMPEONATO PREMIO MEDALLA COPA TROFEO RECORD VICTORIA DERROTA EMPATE CRIA CRIAR",
+                values: {'A':1, 'B':3, 'C':3, 'D':2, 'E':1, 'F':4, 'G':2, 'H':4, 'I':1, 'J':7, 'L':1, 'M':3, 'N':1, 'Ñ':8, 'O':1, 'P':3, 'Q':5, 'R':1, 'S':1, 'T':1, 'U':1, 'V':4, 'X':8, 'Y':4, 'Z':9},
+                bag: "AAAAAAAAAAAAEEEEEEEEEEEEOOOOOOOOOIIIIIISSSSSSNNNNNLLLLRRRRRUUUUUTTTTDDDDDGGCCCCBBMMMPPHHFFVYYQJXZÑ",
+                ui: {
+                    subtitle: "Solo se validan las palabras unidas a tu <strong>Cola</strong>. Si comes una letra equivocada, bloqueará tu palabra.",
+                    loading: "Cargando diccionario...",
+                    playNow: "Jugar Ahora",
+                    playOffline: "Jugar (Modo Offline)",
+                    move: "Moverse",
+                    submit: "Validar",
+                    orderTitle: "Orden de Letras Comidas",
+                    headTail: "<span>(Cabeza / Antigua)</span> <span>(Cola / Reciente)</span>",
+                    eatTiles: "Come fichas...",
+                    submitBtn: "Validar Palabra",
+                    foundWords: "Palabras Formadas",
+                    noWords: "Ninguna palabra aún",
+                    gameOver: "¡Juego Terminado!",
+                    scoreMsg: "Puntuación final: <strong>{score}</strong><br>Palabras formadas: {count}",
+                    playAgain: "Jugar de Nuevo",
+                    minLetters: "Mínimo 3 letras",
+                    invalid: "Bloqueada / Inválida",
+                    multTexts: { x2L: 'x2 L', x3L: 'x3 L', x2P: 'x2 P', x3P: 'x3 P' },
+                    helpTitle: "Instrucciones",
+                    helpText: `
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>Mueve la serpiente usando las <b>flechas</b>, <b>WASD</b>, o deslizando.</li>
+                            <li>Come fichas para añadir letras a tu <b>cola</b>.</li>
+                            <li>Forma palabras válidas de 3 o más letras que terminen en la punta de tu cola.</li>
+                            <li>Presiona <b>Espacio</b> (o el botón Validar) para canjear tu palabra por puntos y reducir tu tamaño.</li>
+                            <li>Si te equivocas de letra, tu palabra quedará <b>bloqueada</b>. Debes usar esa letra errónea para formar una nueva palabra y liberarte.</li>
+                            <li>¡Pasa tus letras sobre los multiplicadores (<b>x2 L</b>, <b>x3 P</b>) en el tablero al momento de validar para multiplicar tu puntaje!</li>
+                        </ul>
+                    `,
+                    footer: "Prototipo bajo licencia MIT. Código generado en Gemini por Pablo G. Guízar."
+                }
+            },
+            en: {
+                url: 'https://cdn.jsdelivr.net/npm/an-array-of-english-words/index.json',
+                fallback: "THE AND FOR THAT THIS WITH YOU NOT ARE FROM HAVE WAS ONE ALL THEY THEIR MORE HAS WILL WOULD THERE THEIR WHAT SO UP OUT IF ABOUT WHO GET WHICH GO ME WHEN MAKE CAN LIKE TIME NO JUST HIM KNOW TAKE PEOPLE INTO YEAR YOUR GOOD SOME COULD THEM SEE OTHER THAN THEN NOW LOOK ONLY COME ITS OVER THINK ALSO BACK AFTER USE TWO HOW OUR WORK FIRST WELL WAY EVEN NEW WANT BECAUSE ANY THESE GIVE DAY MOST US GAME TIME WORD PLAY LETTERS",
+                values: {'A':1, 'B':3, 'C':3, 'D':2, 'E':1, 'F':4, 'G':2, 'H':4, 'I':1, 'J':7, 'K':5, 'L':1, 'M':3, 'N':1, 'O':1, 'P':3, 'Q':9, 'R':1, 'S':1, 'T':1, 'U':1, 'V':4, 'W':4, 'X':7, 'Y':4, 'Z':9},
+                bag: "AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ",
+                ui: {
+                    subtitle: "Only words attached to your <strong>Tail</strong> are validated. Wrong letters block your word.",
+                    loading: "Loading dictionary...",
+                    playNow: "Play Now",
+                    playOffline: "Play (Offline Mode)",
+                    move: "Move",
+                    submit: "Submit",
+                    orderTitle: "Eaten Letters Order",
+                    headTail: "<span>(Head / Oldest)</span> <span>(Tail / Newest)</span>",
+                    eatTiles: "Eat tiles...",
+                    submitBtn: "Submit Word",
+                    foundWords: "Words Found",
+                    noWords: "No words yet",
+                    gameOver: "Game Over!",
+                    scoreMsg: "Final score: <strong>{score}</strong><br>Words formed: {count}",
+                    playAgain: "Play Again",
+                    minLetters: "Minimum 3 letters",
+                    invalid: "Blocked / Invalid",
+                    multTexts: { x2L: 'x2 L', x3L: 'x3 L', x2P: 'x2 W', x3P: 'x3 W' },
+                    helpTitle: "How to Play",
+                    helpText: `
+                        <ul class="list-disc pl-5 space-y-2">
+                            <li>Move the snake using <b>Arrows</b>, <b>WASD</b>, or swipe gestures.</li>
+                            <li>Eat tiles to add letters to your <b>tail</b>.</li>
+                            <li>Form valid words of 3 or more letters ending at the tip of your tail.</li>
+                            <li>Press <b>Space</b> (or Submit button) to cash in your word for points and reduce your size.</li>
+                            <li>If you eat a wrong letter, it <b>blocks</b> your word. You must use that wrong letter to form a new word to free yourself!</li>
+                            <li>Place your letters over multipliers (<b>x2 L</b>, <b>x3 W</b>) on the board when submitting for massive points!</li>
+                        </ul>
+                    `,
+                    footer: "Prototype under MIT license. Code generated in Gemini by Pablo G. Guízar."
+                }
+            }
+        };
+
+        let currentLang = 'es';
+        let dictionary = new Set();
+        let isDictionaryLoaded = false;
+
+        function updateStaticUI() {
+            const ui = langData[currentLang].ui;
+            document.getElementById('overlayMessage').innerHTML = ui.subtitle;
+            document.getElementById('lblMove').innerText = ui.move;
+            document.getElementById('lblSubmit').innerText = ui.submit;
+            document.getElementById('lblOrder').innerText = ui.orderTitle;
+            document.getElementById('lblHeadTail').innerHTML = ui.headTail;
+            if(collectedLetters.length === 0) document.getElementById('currentLetters').innerHTML = `<span class="text-slate-400 dark:text-slate-500 text-xs italic w-full text-center mt-1">${ui.eatTiles}</span>`;
+            document.getElementById('lblSubmitBtn').innerText = ui.submitBtn;
+            document.getElementById('lblFound').innerText = ui.foundWords;
+            if(wordsFound.length === 0) document.getElementById('wordsList').innerHTML = `<span class="text-slate-400 dark:text-slate-500 text-xs italic text-center mt-2">${ui.noWords}</span>`;
+            
+            document.getElementById('lblHelpTitle').innerHTML = `
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                ${ui.helpTitle}
+            `;
+            document.getElementById('lblHelpText').innerHTML = ui.helpText;
+            document.getElementById('lblFooter').innerHTML = ui.footer;
+
+            if (isGameOver) {
+                document.getElementById('overlayTitle').innerHTML = `
+                    <span class="relative inline-block mr-[0.02em]">
+                        <span class="text-transparent bg-clip-text bg-gradient-to-br from-emerald-400 to-emerald-600">S</span>
+                        <span class="absolute top-[22%] right-[12%] w-[0.2em] h-[0.2em] bg-white rounded-full flex items-center justify-center shadow-sm pointer-events-none">
+                            <span class="w-[0.1em] h-[0.1em] bg-slate-900 rounded-full"></span>
+                        </span>
+                    </span>
+                    <span>${ui.gameOver.replace('S', '')}</span> <!-- Reemplazo visual básico -->
+                `;
+                // Restauramos el titulo normal si no es un juego de palabras con "S"
+                if(currentLang === 'es') document.getElementById('overlayTitle').innerText = ui.gameOver;
+                
+                document.getElementById('overlayMessage').innerHTML = ui.scoreMsg.replace('{score}', score).replace('{count}', wordsFound.length);
+                document.getElementById('startBtn').innerText = ui.playAgain;
+            }
+        }
+
+        async function loadDictionary() {
+            const btn = document.getElementById('startBtn');
+            const ui = langData[currentLang].ui;
+            
+            btn.innerText = ui.loading;
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+            btn.classList.remove('hover:scale-105', 'active:scale-95');
+            
+            dictionary.clear();
+            isDictionaryLoaded = false;
+
+            try {
+                const response = await fetch(langData[currentLang].url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const wordsArray = await response.json();
+                wordsArray.forEach(w => {
+                    if(w.length >= 3) {
+                        const normalized = w.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+                        dictionary.add(normalized);
+                    }
+                });
+                
+                isDictionaryLoaded = true;
+                btn.innerText = ui.playNow;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btn.classList.add('hover:scale-105', 'active:scale-95');
+                btn.disabled = false;
+            } catch (error) {
+                console.error("Usando respaldo local.", error);
+                langData[currentLang].fallback.split(" ").forEach(w => {
+                    if(w.length >= 3) {
+                        dictionary.add(w);
+                        if(currentLang === 'es') {
+                            if ("AEIOU".includes(w[w.length-1])) dictionary.add(w + "S");
+                            else if (!"S".includes(w[w.length-1])) dictionary.add(w + "ES");
+                        } else {
+                            if (!w.endsWith("S")) dictionary.add(w + "S");
+                        }
+                    }
+                });
+                isDictionaryLoaded = true;
+                btn.innerText = ui.playOffline;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                btn.classList.add('hover:scale-105', 'active:scale-95');
+                btn.disabled = false;
+            }
+        }
+
+        // --- MANEJO DE IDIOMAS ---
+        document.getElementById('langEsBtn').addEventListener('click', () => {
+            if (currentLang === 'es') return;
+            currentLang = 'es';
+            document.getElementById('langEsBtn').className = "px-3 py-1 rounded-md bg-indigo-600 text-white font-bold text-xs transition";
+            document.getElementById('langEnBtn').className = "px-3 py-1 rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white font-bold text-xs transition";
+            updateStaticUI();
+            loadDictionary();
+            drawGame();
+        });
+
+        document.getElementById('langEnBtn').addEventListener('click', () => {
+            if (currentLang === 'en') return;
+            currentLang = 'en';
+            document.getElementById('langEnBtn').className = "px-3 py-1 rounded-md bg-indigo-600 text-white font-bold text-xs transition";
+            document.getElementById('langEsBtn').className = "px-3 py-1 rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white font-bold text-xs transition";
+            updateStaticUI();
+            loadDictionary();
+            drawGame();
+        });
+
+        const MULTIPLIER_TYPES = {
+            x2L: { color: '#34d399', bg: 'rgba(52, 211, 153, 0.25)' }, // Emerald
+            x3L: { color: '#10b981', bg: 'rgba(16, 185, 129, 0.3)' },  // Darker Emerald
+            x2P: { color: '#fbbf24', bg: 'rgba(251, 191, 36, 0.25)' }, // Amber
+            x3P: { color: '#ea580c', bg: 'rgba(234, 88, 12, 0.3)' }    // Orange
+        };
+
+        // --- 2. VARIABLES DE ESTADO ---
+        let snake = [];
+        let collectedLetters = []; 
+        let tiles = [];
+        let multipliers = [];
+        let direction = { x: 0, y: 0 };
+        let inputQueue = [];
+        let score = 0;
+        let isGameOver = false;
+        let isGameRunning = false;
+        let lastTime = 0;
+        let tickRate = 250; 
+        let accumulator = 0;
+        let animations = [];
+        let wordsFound = [];
+
+        // UI Elements
+        const scoreDisplay = document.getElementById('scoreDisplay');
+        const currentLettersContainer = document.getElementById('currentLetters');
+        const wordsListContainer = document.getElementById('wordsList');
+        const overlay = document.getElementById('overlay');
+        const overlayTitle = document.getElementById('overlayTitle');
+        const overlayMessage = document.getElementById('overlayMessage');
+        const startBtn = document.getElementById('startBtn');
+        const submitWordBtn = document.getElementById('submitWordBtn');
+
+        // --- 3. CONTROLES ---
+        window.addEventListener('keydown', e => {
+            if(!isGameRunning) return;
+            let newDir = null;
+            if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') newDir = { x: 0, y: -1 };
+            if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') newDir = { x: 0, y: 1 };
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') newDir = { x: -1, y: 0 };
+            if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') newDir = { x: 1, y: 0 };
+            
+            if (newDir) {
+                e.preventDefault();
+                inputQueue.push(newDir);
+            } else if (e.code === 'Space') {
+                e.preventDefault();
+                attemptSubmitWord();
+            }
+        });
+
+        // Touch Controls
+        let touchStartX = 0;
+        let touchStartY = 0;
+        canvas.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+            touchStartY = e.changedTouches[0].screenY;
+        }, {passive: false});
+
+        canvas.addEventListener('touchmove', e => { e.preventDefault(); }, {passive: false});
+
+        canvas.addEventListener('touchend', e => {
+            if(!isGameRunning) return;
+            let dx = e.changedTouches[0].screenX - touchStartX;
+            let dy = e.changedTouches[0].screenY - touchStartY;
+            if (Math.abs(dx) > Math.abs(dy)) {
+                if (Math.abs(dx) > 30) inputQueue.push({ x: dx > 0 ? 1 : -1, y: 0 });
+            } else {
+                if (Math.abs(dy) > 30) inputQueue.push({ x: 0, y: dy > 0 ? 1 : -1 });
+            }
+        });
+
+        // --- 4. MECÁNICAS ---
+        startBtn.addEventListener('click', startGame);
+        submitWordBtn.addEventListener('click', () => { if(isGameRunning) attemptSubmitWord(); });
+
+        function generateMultipliers() {
+            multipliers = [];
+            const addM = (coords, type) => {
+                coords.forEach(([x,y]) => multipliers.push({x, y, type, active: true}));
+            };
+            
+            addM([[0,0], [0,19], [19,0], [19,19], [9,9], [10,10], [9,10], [10,9]], 'x3P');
+            addM([[2,2], [3,3], [16,16], [17,17], [2,17], [3,16], [17,2], [16,3], [9,2], [10,2], [9,17], [10,17], [2,9], [2,10], [17,9], [17,10]], 'x2P');
+            addM([[5,5], [5,14], [14,5], [14,14], [0,7], [0,12], [19,7], [19,12], [7,0], [12,0], [7,19], [12,19]], 'x3L');
+            addM([[4,9], [4,10], [15,9], [15,10], [9,4], [10,4], [9,15], [10,15], [6,6], [6,13], [13,6], [13,13]], 'x2L');
+        }
+
+        function startGame() {
+            snake = [{ x: 10, y: 10 }];
+            collectedLetters = [];
+            tiles = [];
+            direction = { x: 0, y: 0 }; 
+            inputQueue = [];
+            score = 0;
+            tickRate = 250; 
+            wordsFound = [];
+            isGameOver = false;
+            isGameRunning = true;
+            accumulator = 0;
+            lastTime = performance.now();
+            
+            overlay.classList.add('opacity-0', 'pointer-events-none');
+            
+            generateMultipliers();
+            while(tiles.length < 7) spawnTile();
+            
+            updateUI();
+            requestAnimationFrame(gameLoop);
+        }
+
+        function gameLoop(time) {
+            if (!isGameRunning) return;
+            requestAnimationFrame(gameLoop);
+            
+            let deltaTime = time - lastTime;
+            lastTime = time;
+            accumulator += deltaTime;
+
+            animations.forEach(a => {
+                a.y -= (20 * (deltaTime/1000)); 
+                a.life -= deltaTime;
+            });
+            animations = animations.filter(a => a.life > 0);
+
+            if (accumulator >= tickRate) {
+                accumulator -= tickRate;
+                updateGame();
+            }
+            drawGame();
+        }
+
+        function updateGame() {
+            if (isGameOver) return;
+
+            if (inputQueue.length > 0) {
+                let nextDir = inputQueue.shift();
+                if ((direction.x === 0 && direction.y === 0) || 
+                    (nextDir.x !== -direction.x || nextDir.y !== -direction.y)) {
+                    direction = nextDir;
+                }
+            }
+
+            if (direction.x === 0 && direction.y === 0) return;
+
+            let newHead = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
+
+            if (newHead.x < 0 || newHead.x >= GRID_SIZE || newHead.y < 0 || newHead.y >= GRID_SIZE) {
+                endGame();
+                return;
+            }
+
+            for (let i = 0; i < snake.length; i++) {
+                if (snake[i].x === newHead.x && snake[i].y === newHead.y) {
+                    endGame();
+                    return;
+                }
+            }
+
+            let ateIndex = tiles.findIndex(t => t.x === newHead.x && t.y === newHead.y);
+            let prevTail = { x: snake[snake.length - 1].x, y: snake[snake.length - 1].y };
+
+            for (let i = snake.length - 1; i > 0; i--) {
+                snake[i].x = snake[i - 1].x;
+                snake[i].y = snake[i - 1].y;
+            }
+            snake[0].x = newHead.x;
+            snake[0].y = newHead.y;
+
+            if (ateIndex !== -1) {
+                let eatenTile = tiles[ateIndex];
+                tiles.splice(ateIndex, 1);
+                
+                score += 1; 
+                tickRate = Math.max(70, tickRate - 3); 
+                createFloatingText("+1", newHead.x, newHead.y, "#fde68a");
+
+                collectedLetters.push(eatenTile.char);
+                snake.push({ x: prevTail.x, y: prevTail.y, char: '' });
+            }
+
+            for (let i = 1; i < snake.length; i++) {
+                snake[i].char = collectedLetters[i - 1];
+            }
+
+            while (tiles.length < 7) spawnTile();
+            updateUI();
+        }
+
+        function attemptSubmitWord() {
+            const ui = langData[currentLang].ui;
+            if (collectedLetters.length < 3) {
+                createFloatingText(ui.minLetters, snake[0].x, snake[0].y - 1, "#ef4444");
+                return;
+            }
+
+            const wordStr = collectedLetters.join('');
+            let wordFound = false;
+
+            for (let len = wordStr.length; len >= 3; len--) {
+                let word = wordStr.substr(wordStr.length - len, len);
+                
+                if (dictionary.has(word)) {
+                    let wordSegments = snake.slice(snake.length - len);
+                    let wordBaseScore = 0;
+                    let wordMultipliersCount = [];
+                    let usedMultipliers = [];
+                    let values = langData[currentLang].values;
+
+                    for (let i = 0; i < len; i++) {
+                        let char = word[i];
+                        let segment = wordSegments[i];
+                        let letterScore = values[char] || 1;
+                        
+                        let mIndex = multipliers.findIndex(m => m.active && m.x === segment.x && m.y === segment.y);
+                        if (mIndex !== -1) {
+                            let m = multipliers[mIndex];
+                            if (m.type === 'x2L') letterScore *= 2;
+                            else if (m.type === 'x3L') letterScore *= 3;
+                            else if (m.type === 'x2P' || m.type === 'x3P') wordMultipliersCount.push(m.type);
+                            usedMultipliers.push(m);
+                        }
+                        wordBaseScore += letterScore;
+                    }
+
+                    let totalPoints = wordBaseScore;
+                    
+                    wordMultipliersCount.forEach(type => {
+                        if (type === 'x2P') totalPoints *= 2;
+                        if (type === 'x3P') totalPoints *= 3;
+                    });
+
+                    let multiplier = Math.max(1, len - 2); 
+                    totalPoints *= multiplier;
+                    
+                    score += totalPoints;
+                    
+                    let mText = usedMultipliers.length > 0 ? ` (+${usedMultipliers.map(m=>ui.multTexts[m.type]).join(', ')})` : '';
+                    wordsFound.push({ word: word + mText, points: totalPoints });
+                    
+                    createFloatingText("+" + totalPoints + " " + word, snake[0].x, snake[0].y - 1, "#4ade80");
+
+                    usedMultipliers.forEach(m => m.active = false);
+
+                    collectedLetters.splice(-len);
+                    snake.splice(-len);
+
+                    for (let i = 1; i < snake.length; i++) {
+                        snake[i].char = collectedLetters[i - 1];
+                    }
+
+                    updateUI();
+                    wordFound = true;
+                    return; 
+                }
+            }
+
+            if (!wordFound) {
+                createFloatingText(ui.invalid, snake[0].x, snake[0].y - 1, "#ef4444");
+            }
+        }
+
+        function spawnTile() {
+            let emptySpots = [];
+            for(let x=0; x<GRID_SIZE; x++){
+                for(let y=0; y<GRID_SIZE; y++){
+                    if(!snake.some(s => s.x === x && s.y === y) && !tiles.some(t => t.x === x && t.y === y)) {
+                        emptySpots.push({x, y});
+                    }
+                }
+            }
+            if(emptySpots.length > 0) {
+                let spot = emptySpots[Math.floor(Math.random() * emptySpots.length)];
+                let bag = langData[currentLang].bag;
+                let randomChar = bag[Math.floor(Math.random() * bag.length)];
+                tiles.push({ x: spot.x, y: spot.y, char: randomChar });
+            }
+        }
+
+        function createFloatingText(text, x, y, color) {
+            animations.push({ text: text, x: x * CELL_SIZE, y: y * CELL_SIZE, color: color, life: 1000 });
+        }
+
+        function endGame() {
+            const ui = langData[currentLang].ui;
+            isGameOver = true;
+            isGameRunning = false;
+            
+            // Re-aplicar el logo como titulo al morir si es español
+            if(currentLang === 'es') {
+                document.getElementById('overlayTitle').innerText = ui.gameOver;
+            } else {
+                document.getElementById('overlayTitle').innerText = ui.gameOver;
+            }
+            
+            document.getElementById('overlayMessage').innerHTML = ui.scoreMsg.replace('{score}', score).replace('{count}', wordsFound.length);
+            startBtn.innerText = ui.playAgain;
+            document.getElementById('overlay').classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        // --- 5. RENDERIZADO Y UI ---
+        function drawGame() {
+            const isDark = document.documentElement.classList.contains('dark');
+            
+            // Background depending on theme
+            ctx.fillStyle = isDark ? '#1e293b' : '#f8fafc';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Grid depending on theme
+            ctx.strokeStyle = isDark ? '#334155' : '#e2e8f0';
+            ctx.lineWidth = 1;
+            for(let i = 0; i <= canvas.width; i += CELL_SIZE) {
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
+            }
+
+            // Draw Multipliers
+            multipliers.forEach(m => {
+                let px = m.x * CELL_SIZE;
+                let py = m.y * CELL_SIZE;
+                
+                if (m.active) {
+                    ctx.fillStyle = MULTIPLIER_TYPES[m.type].bg;
+                    ctx.fillRect(px + 1, py + 1, CELL_SIZE - 2, CELL_SIZE - 2);
+                    
+                    ctx.fillStyle = MULTIPLIER_TYPES[m.type].color;
+                    ctx.font = "bold 10px Inter";
+                    ctx.textAlign = "center";
+                    ctx.textBaseline = "middle";
+                    ctx.fillText(langData[currentLang].ui.multTexts[m.type], px + CELL_SIZE/2, py + CELL_SIZE/2);
+                } else {
+                    ctx.fillStyle = isDark ? 'rgba(255, 255, 255, 0.03)' : 'rgba(0, 0, 0, 0.03)';
+                    ctx.fillRect(px + 1, py + 1, CELL_SIZE - 2, CELL_SIZE - 2);
+                }
+            });
+
+            // Draw Tiles
+            tiles.forEach(tile => {
+                let px = tile.x * CELL_SIZE;
+                let py = tile.y * CELL_SIZE;
+                
+                let grd = ctx.createLinearGradient(px, py, px+CELL_SIZE, py+CELL_SIZE);
+                grd.addColorStop(0, "#818cf8"); 
+                grd.addColorStop(1, "#4f46e5"); 
+                ctx.fillStyle = grd;
+                ctx.beginPath(); ctx.roundRect(px+1, py+1, CELL_SIZE-2, CELL_SIZE-2, 4); ctx.fill();
+                
+                ctx.strokeStyle = "#3730a3"; 
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                ctx.fillStyle = "#ffffff";
+                ctx.font = "bold 15px Inter";
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.fillText(tile.char, px + CELL_SIZE/2, py + CELL_SIZE/2);
+
+                ctx.font = "6px Inter";
+                ctx.fillStyle = "#e0e7ff"; 
+                ctx.fillText(langData[currentLang].values[tile.char] || 1, px + CELL_SIZE - 5, py + CELL_SIZE - 5);
+            });
+
+            // Draw Snake
+            for (let i = snake.length - 1; i >= 0; i--) {
+                let segment = snake[i];
+                let px = segment.x * CELL_SIZE;
+                let py = segment.y * CELL_SIZE;
+
+                if (i === 0) {
+                    ctx.fillStyle = '#059669'; 
+                    ctx.beginPath(); ctx.roundRect(px+1, py+1, CELL_SIZE-2, CELL_SIZE-2, 6); ctx.fill();
+                    
+                    ctx.fillStyle = 'white';
+                    if(direction.x === 1) { 
+                        ctx.fillRect(px+16, py+6, 4, 4); ctx.fillRect(px+16, py+14, 4, 4);
+                    } else if(direction.x === -1) { 
+                        ctx.fillRect(px+4, py+6, 4, 4); ctx.fillRect(px+4, py+14, 4, 4);
+                    } else if(direction.y === 1) { 
+                        ctx.fillRect(px+6, py+16, 4, 4); ctx.fillRect(px+14, py+16, 4, 4);
+                    } else { 
+                        ctx.fillRect(px+6, py+4, 4, 4); ctx.fillRect(px+14, py+4, 4, 4);
+                    }
+                } else {
+                    ctx.fillStyle = '#10b981'; 
+                    ctx.beginPath(); ctx.roundRect(px+2, py+2, CELL_SIZE-4, CELL_SIZE-4, 4); ctx.fill();
+                    
+                    if (segment.char) {
+                        ctx.fillStyle = '#ecfdf5';
+                        ctx.font = "bold 14px Inter";
+                        ctx.textAlign = "center";
+                        ctx.textBaseline = "middle";
+                        ctx.fillText(segment.char, px + CELL_SIZE/2, py + CELL_SIZE/2 + 1);
+                    }
+                }
+            }
+
+            animations.forEach(a => {
+                ctx.globalAlpha = Math.max(0, a.life / 1000);
+                ctx.fillStyle = a.color;
+                ctx.font = "bold 18px Inter";
+                ctx.textAlign = "center";
+                ctx.fillText(a.text, a.x + CELL_SIZE/2, a.y);
+                ctx.globalAlpha = 1.0;
+            });
+        }
+
+        function updateUI() {
+            const ui = langData[currentLang].ui;
+            scoreDisplay.innerText = score;
+
+            if (collectedLetters.length > 0) {
+                let lettersHtml = '';
+                for(let i = 0; i < collectedLetters.length; i++) {
+                    let char = collectedLetters[i];
+                    lettersHtml += `
+                        <div class="tile w-7 h-7 sm:w-9 sm:h-9 rounded flex items-center justify-center font-bold text-sm sm:text-lg relative shrink-0">
+                            ${char}
+                            <span class="absolute bottom-0.5 right-1 text-[0.4rem] sm:text-[0.5rem] opacity-70">${langData[currentLang].values[char] || 1}</span>
+                        </div>
+                    `;
+                    if (i < collectedLetters.length - 1) {
+                        lettersHtml += `<span class="text-slate-400 dark:text-slate-500 text-[10px] sm:text-xs shrink-0">▶</span>`;
+                    }
+                }
+                currentLettersContainer.innerHTML = lettersHtml;
+            } else {
+                currentLettersContainer.innerHTML = `<span class="text-slate-400 dark:text-slate-500 text-xs italic w-full text-center mt-1">${ui.eatTiles}</span>`;
+            }
+
+            if (wordsFound.length > 0) {
+                let wordsHtml = '';
+                [...wordsFound].reverse().forEach(wf => {
+                    wordsHtml += `
+                        <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-700/50 px-2 py-1.5 sm:px-3 sm:py-2 rounded border border-slate-200 dark:border-transparent">
+                            <span class="font-bold tracking-widest text-emerald-600 dark:text-emerald-300 text-xs sm:text-base">${wf.word}</span>
+                            <span class="text-[10px] sm:text-xs bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 px-1.5 py-0.5 sm:px-2 sm:py-1 rounded font-semibold">+${wf.points} pts</span>
+                        </div>
+                    `;
+                });
+                wordsListContainer.innerHTML = wordsHtml;
+            } else {
+                wordsListContainer.innerHTML = `<span class="text-slate-400 dark:text-slate-500 text-xs italic text-center mt-2">${ui.noWords}</span>`;
+            }
+        }
+
+        // Initialize translations & load dictionary
+        updateStaticUI();
+        loadDictionary();
+
+        drawGame();
+    </script>
+</body>
+</html>
