@@ -4,7 +4,7 @@ Sletter es un juego educativo de navegador que combina las mecánicas del clási
 
 El objetivo es mover la serpiente, comer fichas con letras y formar palabras válidas de tres letras o más, evitando colisionar con los bordes o tu propio cuerpo.
 
-![Sletter UI Screenshot]() *(Añade una captura de pantalla aquí)*
+![Sletter UI Screenshot](./assets/Sletter%20UI%20Screenshot.png)
 
 ## Características Principales 🚀
 
