@@ -45,11 +45,9 @@ Al estar estructurado con **ES6 Modules (`import`/`export`)**, abrir el archivo 
 
 Los extensos diccionarios integrados en **Sletter** han sido posibles gracias a proyectos lingüísticos y repositorios de código abierto. Reconocemos y agradecemos a las comunidades que mantienen estas bases de datos léxicas:
 
-- **Español (636k palabras):** Compilado a partir de recursos abiertos y bases de datos léxicas en español (ej. *Wiktionary*, listas de juegos de palabras).
-- **Inglés (274k palabras):** Basado en listas estándar de palabras en inglés (ej. *SOWPODS/TWL*).
-- **Francés (336k palabras):** Basado en recursos léxicos abiertos en francés (ej. *ODS*).
-
-*(Si utilizaste alguna fuente o proyecto en específico para los archivos `.json`, este es el lugar ideal para colocar el enlace directo al autor original).*
+- **Español (636k palabras):** [github.com/words/an-array-of-spanish-words](https://github.com/words/an-array-of-spanish-words)
+- **Inglés (274k palabras):** [github.com/words/an-array-of-english-words](https://github.com/words/an-array-of-english-words)
+- **Francés (336k palabras):** [github.com/words/an-array-of-french-words](https://github.com/words/an-array-of-french-words)
 
 ## Autor 👨‍💻
 
