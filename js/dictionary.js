@@ -93,13 +93,27 @@ class Dictionary {
     populate(wordsArray) {
         wordsArray.forEach(w => {
             if(w.length >= 3) {
-                const normalized = w.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toUpperCase();
+                // Primero pasar a mayúsculas
+                let upperW = w.toUpperCase();
+                // Proteger la Ñ antes de normalizar
+                let protectedW = upperW.replace(/Ñ/g, "##NYE##");
+                // Normalizar y quitar diacríticos
+                let normalized = protectedW.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                // Restaurar la Ñ
+                normalized = normalized.replace(/##NYE##/g, "Ñ");
+                
                 this.words.add(normalized);
                 
                 // Add some basic plurals for the fallback
                 if(this.currentLang === 'es') {
-                    if ("AEIOU".includes(normalized[normalized.length-1])) this.words.add(normalized + "S");
-                    else if (!"S".includes(normalized[normalized.length-1])) this.words.add(normalized + "ES");
+                    let lastChar = normalized[normalized.length-1];
+                    if ("AEIOU".includes(lastChar)) {
+                        this.words.add(normalized + "S");
+                    } else if (lastChar === 'Z') {
+                        this.words.add(normalized.slice(0, -1) + "CES");
+                    } else if (lastChar !== 'S') {
+                        this.words.add(normalized + "ES");
+                    }
                 } else if (this.currentLang === 'en' || this.currentLang === 'fr') {
                     if (!normalized.endsWith("S")) this.words.add(normalized + "S");
                 }
