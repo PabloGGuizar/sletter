@@ -2,102 +2,6 @@
 import { eventBus } from './events.js';
 import { dictionary } from './dictionary.js';
 
-export const uiTexts = {
-    es: {
-        subtitle: "Solo se validan las palabras unidas a tu <strong>Cola</strong>. Si comes una letra equivocada, bloqueará tu palabra.",
-        loading: "Cargando diccionario...",
-        playNow: "Jugar Ahora",
-        playOffline: "Jugar (Modo Offline)",
-        move: "Moverse",
-        submit: "Validar",
-        orderTitle: "Orden de Letras Comidas",
-        headTail: "<span>(Cabeza / Antigua)</span> <span>(Cola / Reciente)</span>",
-        eatTiles: "Come fichas...",
-        submitBtn: "Validar Palabra",
-        foundWords: "Palabras Formadas",
-        noWords: "Ninguna palabra aún",
-        gameOver: "¡Juego Terminado!",
-        scoreMsg: "Puntuación final: <strong>{score}</strong><br>Palabras formadas: {count}",
-        playAgain: "Jugar de Nuevo",
-        helpTitle: "Instrucciones",
-        helpText: `
-            <ul class="list-disc pl-5 space-y-2">
-                <li>Mueve la serpiente usando las <b>flechas</b>, <b>WASD</b>, o deslizando.</li>
-                <li>Come fichas para añadir letras a tu <b>cola</b>.</li>
-                <li>Forma palabras válidas de 3 o más letras que terminen en la punta de tu cola.</li>
-                <li>Presiona <b>Espacio</b> (o el botón Validar) para canjear tu palabra por puntos y reducir tu tamaño.</li>
-                <li>Si te equivocas de letra, tu palabra quedará <b>bloqueada</b>. Debes usar esa letra errónea para formar una nueva palabra y liberarte.</li>
-                <li>¡Pasa tus letras sobre los multiplicadores (<b>x2 L</b>, <b>x3 P</b>) en el tablero al momento de validar para multiplicar tu puntaje!</li>
-                <li><b>Diccionarios Locales:</b> Español (636k), Inglés (274k) y Francés (336k) palabras validadas.</li>
-            </ul>
-        `,
-        footer: "&copy; 2026 Sletter — Desarrollado por <a href='https://www.linkedin.com/in/pablogguizar/' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>Pablo G. Guízar</a>. Código abierto bajo licencia MIT disponible en <a href='https://github.com/PabloGGuizar/sletter' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>GitHub</a>.",
-        recordsTitle: "Top Récords Locales"
-    },
-    en: {
-        subtitle: "Only words attached to your <strong>Tail</strong> are validated. Wrong letters block your word.",
-        loading: "Loading dictionary...",
-        playNow: "Play Now",
-        playOffline: "Play (Offline Mode)",
-        move: "Move",
-        submit: "Submit",
-        orderTitle: "Eaten Letters Order",
-        headTail: "<span>(Head / Oldest)</span> <span>(Tail / Newest)</span>",
-        eatTiles: "Eat tiles...",
-        submitBtn: "Submit Word",
-        foundWords: "Words Found",
-        noWords: "No words yet",
-        gameOver: "Game Over!",
-        scoreMsg: "Final score: <strong>{score}</strong><br>Words formed: {count}",
-        playAgain: "Play Again",
-        helpTitle: "How to Play",
-        helpText: `
-            <ul class="list-disc pl-5 space-y-2">
-                <li>Move the snake using <b>Arrows</b>, <b>WASD</b>, or swipe gestures.</li>
-                <li>Eat tiles to add letters to your <b>tail</b>.</li>
-                <li>Form valid words of 3 or more letters ending at the tip of your tail.</li>
-                <li>Press <b>Space</b> (or Submit button) to cash in your word for points and reduce your size.</li>
-                <li>If you eat a wrong letter, it <b>blocks</b> your word. You must use that wrong letter to form a new word to free yourself!</li>
-                <li>Place your letters over multipliers (<b>x2 L</b>, <b>x3 W</b>) on the board when submitting for massive points!</li>
-                <li><b>Local Dictionaries:</b> Spanish (636k), English (274k), and French (336k) validated words.</li>
-            </ul>
-        `,
-        footer: "&copy; 2026 Sletter — Developed by <a href='https://www.linkedin.com/in/pablogguizar/' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>Pablo G. Guízar</a>. Open source under MIT license available on <a href='https://github.com/PabloGGuizar/sletter' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>GitHub</a>.",
-        recordsTitle: "Top Local Records"
-    },
-    fr: {
-        subtitle: "Seuls les mots rattachés à votre <strong>Queue</strong> sont validés. Les mauvaises lettres bloquent votre mot.",
-        loading: "Chargement du dictionnaire...",
-        playNow: "Jouer Maintenant",
-        playOffline: "Jouer (Mode Hors Ligne)",
-        move: "Bouger",
-        submit: "Valider",
-        orderTitle: "Ordre des Lettres Mangées",
-        headTail: "<span>(Tête / Plus ancienne)</span> <span>(Queue / Plus récente)</span>",
-        eatTiles: "Mangez des tuiles...",
-        submitBtn: "Valider le Mot",
-        foundWords: "Mots Formés",
-        noWords: "Aucun mot pour l'instant",
-        gameOver: "Fin de Partie!",
-        scoreMsg: "Score final: <strong>{score}</strong><br>Mots formés: {count}",
-        playAgain: "Rejouer",
-        helpTitle: "Comment Jouer",
-        helpText: `
-            <ul class="list-disc pl-5 space-y-2">
-                <li>Déplacez le serpent avec les <b>Flèches</b>, <b>WASD</b>, ou en glissant.</li>
-                <li>Mangez des tuiles pour ajouter des lettres à votre <b>queue</b>.</li>
-                <li>Formez des mots valides de 3 lettres ou plus se terminant à la pointe de votre queue.</li>
-                <li>Appuyez sur <b>Espace</b> (ou le bouton Valider) pour échanger votre mot contre des points et réduire votre taille.</li>
-                <li>Si vous mangez une mauvaise lettre, cela <b>bloque</b> votre mot. Vous devez utiliser cette lettre pour former un nouveau mot !</li>
-                <li>Placez vos lettres sur les multiplicateurs (<b>x2 L</b>, <b>x3 M</b>) sur le plateau lors de la validation pour des points massifs !</li>
-                <li><b>Dictionnaires Locaux:</b> Espagnol (636k), Anglais (274k) et Français (336k) mots validés.</li>
-            </ul>
-        `,
-        footer: "&copy; 2026 Sletter — Développé par <a href='https://www.linkedin.com/in/pablogguizar/' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>Pablo G. Guízar</a>. Open source sous licence MIT disponible sur <a href='https://github.com/PabloGGuizar/sletter' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>GitHub</a>.",
-        recordsTitle: "Meilleurs Records Locaux"
-    }
-};
-
 class UIManager {
     constructor() {
         // Elements
@@ -130,9 +34,41 @@ class UIManager {
         this.skipAliasBtn = document.getElementById('skipAliasBtn');
 
         this.pendingScore = 0;
+        this.currentTexts = null;
 
         this.bindEvents();
         this.setupEventListeners();
+    }
+
+    async loadLocale(lang) {
+        try {
+            const res = await fetch(`./data/locales/${lang}.json`);
+            if (!res.ok) throw new Error("Locale not found");
+            this.currentTexts = await res.json();
+        } catch (e) {
+            console.error("Error loading locale, using fallback", e);
+            this.currentTexts = {
+                subtitle: "Solo se validan las palabras unidas a tu <strong>Cola</strong>.",
+                loading: "Cargando...",
+                playNow: "Jugar Ahora",
+                move: "Moverse",
+                submit: "Validar",
+                orderTitle: "Orden de Letras Comidas",
+                headTail: "<span>(Cabeza)</span> <span>(Cola)</span>",
+                eatTiles: "Come fichas...",
+                submitBtn: "Validar Palabra",
+                foundWords: "Palabras Formadas",
+                noWords: "Ninguna palabra aún",
+                gameOver: "¡Juego Terminado!",
+                scoreMsg: "Puntuación final: <strong>{score}</strong><br>Palabras formadas: {count}",
+                playAgain: "Jugar de Nuevo",
+                helpTitle: "Instrucciones",
+                helpText: "Instrucciones no disponibles.",
+                footer: "Sletter",
+                recordsTitle: "Récords Locales"
+            };
+        }
+        this.updateStaticUI();
     }
 
     bindEvents() {
@@ -209,8 +145,9 @@ class UIManager {
         });
     }
 
-    updateStaticUI(lang) {
-        const ui = uiTexts[lang];
+    updateStaticUI() {
+        if (!this.currentTexts) return;
+        const ui = this.currentTexts;
         document.getElementById('overlayMessage').innerHTML = ui.subtitle;
         document.getElementById('lblMove').innerText = ui.move;
         document.getElementById('lblSubmit').innerText = ui.submit;
@@ -228,7 +165,9 @@ class UIManager {
         document.getElementById('lblFooter').innerHTML = ui.footer;
         
         this.currentLettersContainer.innerHTML = `<span class="text-slate-400 dark:text-slate-500 text-xs italic w-full text-center mt-1">${ui.eatTiles}</span>`;
-        this.wordsListContainer.innerHTML = `<span class="text-slate-400 dark:text-slate-500 text-xs italic text-center mt-2">${ui.noWords}</span>`;
+        if (this.wordsListContainer.children.length === 1 && this.wordsListContainer.children[0].id === 'lblNoWords') {
+            this.wordsListContainer.innerHTML = `<span id="lblNoWords" class="text-slate-400 dark:text-slate-500 text-xs italic text-center mt-2">${ui.noWords}</span>`;
+        }
         
         this.overlayTitle.innerHTML = `
             <span class="relative inline-block mr-[0.02em]">
@@ -246,16 +185,16 @@ class UIManager {
     }
 
     setLoadingState() {
-        const lang = document.getElementById('langSelect').value || 'es';
-        this.startBtn.innerText = uiTexts[lang].loading;
+        if(this.currentTexts) this.startBtn.innerText = this.currentTexts.loading;
+        else this.startBtn.innerText = "Cargando...";
         this.startBtn.disabled = true;
         this.startBtn.classList.add('opacity-50', 'cursor-not-allowed');
         this.startBtn.classList.remove('hover:scale-105', 'active:scale-95');
     }
 
     setReadyState(lang) {
-        // En caso de modo offline, el diccionario podría notificar, pero asumimos Play Now.
-        this.startBtn.innerText = uiTexts[lang].playNow;
+        if(this.currentTexts) this.startBtn.innerText = this.currentTexts.playNow;
+        else this.startBtn.innerText = "Jugar Ahora";
         this.startBtn.classList.remove('opacity-50', 'cursor-not-allowed');
         this.startBtn.classList.add('hover:scale-105', 'active:scale-95');
         this.startBtn.disabled = false;
@@ -263,8 +202,8 @@ class UIManager {
 
     renderLetters(letters) {
         if (letters.length === 0) {
-            const lang = document.getElementById('langSelect').value || 'es';
-            this.currentLettersContainer.innerHTML = `<span class="text-slate-400 dark:text-slate-500 text-xs italic w-full text-center mt-1">${uiTexts[lang].eatTiles}</span>`;
+            let eatText = this.currentTexts ? this.currentTexts.eatTiles : "Come fichas...";
+            this.currentLettersContainer.innerHTML = `<span class="text-slate-400 dark:text-slate-500 text-xs italic w-full text-center mt-1">${eatText}</span>`;
             return;
         }
 
@@ -299,8 +238,11 @@ class UIManager {
     }
 
     showGameOver(data) {
-        const lang = document.getElementById('langSelect').value || 'es';
-        const ui = uiTexts[lang];
+        const ui = this.currentTexts || {
+            gameOver: "¡Juego Terminado!",
+            scoreMsg: "Puntuación final: <strong>{score}</strong><br>Palabras formadas: {count}",
+            playAgain: "Jugar de Nuevo"
+        };
         
         this.overlayTitle.innerHTML = `<span class="text-rose-500">${ui.gameOver}</span>`;
         this.overlayMessage.innerHTML = ui.scoreMsg.replace('{score}', data.score).replace('{count}', data.wordsCount);

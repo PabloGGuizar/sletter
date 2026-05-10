@@ -23,8 +23,8 @@ eventBus.on('TOGGLE_MUTE', () => {
 });
 
 // Listen to language change
-eventBus.on('LANGUAGE_CHANGED', (lang) => {
-    uiManager.updateStaticUI(lang);
+eventBus.on('LANGUAGE_CHANGED', async (lang) => {
+    await uiManager.loadLocale(lang);
     dictionary.loadDictionary(lang);
     // Refresh records UI
     eventBus.emit('RECORDS_UPDATED', storage.getTopGlobal());
@@ -33,12 +33,12 @@ eventBus.on('LANGUAGE_CHANGED', (lang) => {
 });
 
 // App initialization
-function init() {
+async function init() {
     // Initial language
     const langSelect = document.getElementById('langSelect');
     const initialLang = langSelect.value || 'es';
     
-    uiManager.updateStaticUI(initialLang);
+    await uiManager.loadLocale(initialLang);
     eventBus.emit('RECORDS_UPDATED', storage.getTopGlobal());
     
     // First load dictionary
