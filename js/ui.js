@@ -31,7 +31,7 @@ export const uiTexts = {
                 <li><b>Diccionarios Locales:</b> Español (636k), Inglés (274k) y Francés (336k) palabras validadas.</li>
             </ul>
         `,
-        footer: "&copy; 2026 Sletter — Desarrollado por Pablo G. Guízar. Código abierto bajo licencia MIT disponible en <a href='https://github.com/PabloGGuizar/sletter' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>GitHub</a>.",
+        footer: "&copy; 2026 Sletter — Desarrollado por <a href='https://www.linkedin.com/in/pablogguizar/' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>Pablo G. Guízar</a>. Código abierto bajo licencia MIT disponible en <a href='https://github.com/PabloGGuizar/sletter' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>GitHub</a>.",
         recordsTitle: "Top Récords Locales"
     },
     en: {
@@ -62,7 +62,7 @@ export const uiTexts = {
                 <li><b>Local Dictionaries:</b> Spanish (636k), English (274k), and French (336k) validated words.</li>
             </ul>
         `,
-        footer: "&copy; 2026 Sletter — Developed by Pablo G. Guízar. Open source under MIT license available on <a href='https://github.com/PabloGGuizar/sletter' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>GitHub</a>.",
+        footer: "&copy; 2026 Sletter — Developed by <a href='https://www.linkedin.com/in/pablogguizar/' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>Pablo G. Guízar</a>. Open source under MIT license available on <a href='https://github.com/PabloGGuizar/sletter' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>GitHub</a>.",
         recordsTitle: "Top Local Records"
     },
     fr: {
@@ -93,7 +93,7 @@ export const uiTexts = {
                 <li><b>Dictionnaires Locaux:</b> Espagnol (636k), Anglais (274k) et Français (336k) mots validés.</li>
             </ul>
         `,
-        footer: "&copy; 2026 Sletter — Développé par Pablo G. Guízar. Open source sous licence MIT disponible sur <a href='https://github.com/PabloGGuizar/sletter' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>GitHub</a>.",
+        footer: "&copy; 2026 Sletter — Développé par <a href='https://www.linkedin.com/in/pablogguizar/' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>Pablo G. Guízar</a>. Open source sous licence MIT disponible sur <a href='https://github.com/PabloGGuizar/sletter' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>GitHub</a>.",
         recordsTitle: "Meilleurs Records Locaux"
     }
 };
