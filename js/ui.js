@@ -77,8 +77,8 @@ class UIManager {
         eventBus.on('WORD_VALIDATED', data => this.addWordFound(data));
         eventBus.on('GAME_OVER', data => this.showGameOver(data));
         eventBus.on('DICTIONARY_LOADING', () => this.setLoadingState());
-        eventBus.on('DICTIONARY_LOADED', (lang) => this.setReadyState(lang, false));
-        eventBus.on('DICTIONARY_OFFLINE', (lang) => this.setReadyState(lang, true));
+        eventBus.on('DICTIONARY_LOADED', (lang) => this.setReadyState(lang));
+        eventBus.on('DICTIONARY_ERROR', (lang) => this.setErrorState(lang));
         eventBus.on('RECORDS_UPDATED', records => this.renderRecords(records));
     }
 
@@ -193,103 +193,24 @@ class UIManager {
         this.startBtn.classList.remove('hover:scale-105', 'active:scale-95');
     }
 
-    setReadyState(lang, isOffline = false) {
-        if(this.currentTexts) this.startBtn.innerText = isOffline
-            ? (this.currentTexts.playOffline || this.currentTexts.playNow)
-            : this.currentTexts.playNow;
+    setReadyState(lang) {
+        if(this.currentTexts) this.startBtn.innerText = this.currentTexts.playNow;
         else this.startBtn.innerText = "Jugar Ahora";
         this.startBtn.classList.remove('opacity-50', 'cursor-not-allowed');
         this.startBtn.classList.add('hover:scale-105', 'active:scale-95');
         this.startBtn.disabled = false;
-
-        this._setOfflineMode(isOffline);
     }
 
-    _setOfflineMode(isOffline) {
-        // Limpiar badge previo si existe
-        const existingBadge = document.getElementById('offlineBadge');
-        if (existingBadge) existingBadge.remove();
-
-        // Restaurar pie de página normal
-        const footerEl = document.getElementById('lblFooter');
-        if (this.currentTexts) footerEl.innerHTML = this.currentTexts.footer;
-
-        if (!isOffline) return;
-
-        const ui = this.currentTexts || {};
-        const badgeTitle = ui.offlineBadgeTitle || 'Sletter Pocket';
-        const tooltip   = ui.offlineTooltip   || 'Modo de vocabulario reducido.';
-        const footerTxt = ui.offlineFooter    || '⚡ Modo Pocket activado';
-
-        // --- Badge en la esquina superior del canvas ---
-        const canvasWrapper = document.querySelector('.relative.w-full.aspect-square');
-        const badge = document.createElement('button');
-        badge.id = 'offlineBadge';
-        badge.setAttribute('aria-label', badgeTitle);
-        badge.className = [
-            'absolute top-2 right-2 z-20',
-            'flex items-center gap-1',
-            'bg-amber-400/90 dark:bg-amber-500/90 backdrop-blur-sm',
-            'text-amber-900 dark:text-amber-950',
-            'text-[10px] font-bold px-2 py-0.5 rounded-full',
-            'shadow-md border border-amber-300 dark:border-amber-400',
-            'transition-all hover:scale-105 active:scale-95 cursor-pointer',
-            'select-none'
-        ].join(' ');
-        badge.innerHTML = `
-            <svg class="w-3 h-3 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="1" y1="1" x2="23" y2="23"/>
-                <path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/>
-                <path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/>
-                <path d="M10.71 5.05A16 16 0 0 1 22.56 9"/>
-                <path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/>
-                <path d="M8.53 16.11a6 6 0 0 1 6.95 0"/>
-                <line x1="12" y1="20" x2="12.01" y2="20"/>
-            </svg>
-            <span>${badgeTitle}</span>
-        `;
-        canvasWrapper.appendChild(badge);
-
-        // --- Tooltip al tocar/hacer click en el badge ---
-        let tooltipEl = null;
-        const showTooltip = () => {
-            if (tooltipEl) return;
-            tooltipEl = document.createElement('div');
-            tooltipEl.className = [
-                'absolute top-10 right-2 z-30 max-w-[220px]',
-                'bg-slate-800 dark:bg-slate-900 text-slate-100',
-                'text-[11px] leading-snug font-medium',
-                'px-3 py-2 rounded-xl shadow-2xl',
-                'border border-slate-600',
-                'animate-fade-in'
-            ].join(' ');
-            tooltipEl.textContent = tooltip;
-            canvasWrapper.appendChild(tooltipEl);
-
-            // Auto-cerrar tras 4s o al click fuera
-            const dismiss = (e) => {
-                if (tooltipEl && !badge.contains(e.target)) {
-                    tooltipEl.remove();
-                    tooltipEl = null;
-                    document.removeEventListener('click', dismiss);
-                }
-            };
-            setTimeout(() => {
-                if (tooltipEl) { tooltipEl.remove(); tooltipEl = null; }
-            }, 4000);
-            // Delay para que el mismo click que abre no lo cierre
-            setTimeout(() => document.addEventListener('click', dismiss), 50);
+    setErrorState(lang) {
+        const errorMsg = {
+            es: 'Error al cargar el diccionario. Revisa tu conexión.',
+            en: 'Failed to load dictionary. Check your connection.',
+            fr: 'Erreur de chargement du dictionnaire. Vérifiez votre connexion.'
         };
-        badge.addEventListener('click', showTooltip);
-
-        // --- Pie de página modo pocket ---
-        if (footerEl) {
-            footerEl.innerHTML = `
-                <span class="inline-flex items-center gap-1 text-amber-500 dark:text-amber-400 font-semibold">
-                    ⚡ ${footerTxt.replace(/^⚡\s*/, '')}
-                </span>
-            `;
-        }
+        this.startBtn.innerText = errorMsg[lang] || errorMsg.es;
+        this.startBtn.disabled = true;
+        this.startBtn.classList.add('opacity-50', 'cursor-not-allowed', 'bg-rose-600');
+        this.startBtn.classList.remove('hover:scale-105', 'active:scale-95', 'from-indigo-500', 'to-cyan-500');
     }
 
     renderLetters(letters) {

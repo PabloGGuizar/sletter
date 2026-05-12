@@ -17,8 +17,5 @@
     "helpTitle": "How to Play",
     "helpText": "<ul class=\"list-disc pl-5 space-y-2\"><li>Move the snake using <b>Arrows</b>, <b>WASD</b>, or swipe gestures.</li><li>Eat tiles to add letters to your <b>tail</b>.</li><li>Form valid words of 3 or more letters ending at the tip of your tail.</li><li>Press <b>Space</b> (or Submit button) to cash in your word for points and reduce your size.</li><li>If you eat a wrong letter, it <b>blocks</b> your word. You must use that wrong letter to form a new word to free yourself!</li><li>Place your letters over multipliers (<b>x2 L</b>, <b>x3 W</b>) on the board when submitting for massive points!</li><li><b>Local Dictionaries:</b> Spanish (636k), English (274k), and French (336k) validated words.</li></ul>",
     "footer": "&copy; 2026 Sletter &mdash; Developed by <a href='https://www.linkedin.com/in/pablogguizar/' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>Pablo G. Guízar</a>. Open source under MIT license available on <a href='https://github.com/PabloGGuizar/sletter' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>GitHub</a>.",
-    "recordsTitle": "Top Local Records",
-    "offlineBadgeTitle": "Sletter Pocket",
-    "offlineTooltip": "Full dictionary unavailable. Playing in ultra-light mode with a reduced vocabulary. You can still score big!",
-    "offlineFooter": "⚡ Pocket Mode active — reduced vocabulary"
+    "recordsTitle": "Top Local Records"
 }
