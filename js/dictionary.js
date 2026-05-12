@@ -60,7 +60,7 @@ class Dictionary {
         if (this.db) {
             const cached = await this.getFromDB(lang);
             if (cached) {
-                this.populate(cached);
+                this.populate(cached, false);
                 this.isLoaded = true;
                 eventBus.emit('DICTIONARY_LOADED', lang);
                 return;
@@ -78,19 +78,19 @@ class Dictionary {
                 this.saveToDB(lang, wordsArray);
             }
             
-            this.populate(wordsArray);
+            this.populate(wordsArray, false);
             this.isLoaded = true;
             eventBus.emit('DICTIONARY_LOADED', lang);
         } catch (error) {
             console.error("Usando respaldo de fallback.", error);
             const fallbackArray = langData[lang].fallback.split(" ");
-            this.populate(fallbackArray);
+            this.populate(fallbackArray, true);
             this.isLoaded = true;
-            eventBus.emit('DICTIONARY_LOADED', lang); // Podríamos emitir LOADED_OFFLINE si queremos
+            eventBus.emit('DICTIONARY_OFFLINE', lang); // Modo pocket: diccionario reducido
         }
     }
 
-    populate(wordsArray) {
+    populate(wordsArray, isFallback = false) {
         wordsArray.forEach(w => {
             if(w.length >= 3) {
                 // Primero pasar a mayúsculas
@@ -104,18 +104,22 @@ class Dictionary {
                 
                 this.words.add(normalized);
                 
-                // Add some basic plurals for the fallback
-                if(this.currentLang === 'es') {
-                    let lastChar = normalized[normalized.length-1];
-                    if ("AEIOU".includes(lastChar)) {
-                        this.words.add(normalized + "S");
-                    } else if (lastChar === 'Z') {
-                        this.words.add(normalized.slice(0, -1) + "CES");
-                    } else if (lastChar !== 'S') {
-                        this.words.add(normalized + "ES");
+                // Generar plurales básicos SOLO para el fallback de emergencia.
+                // El diccionario completo ya contiene todas las formas válidas;
+                // aplicar esto globalmente genera palabras inválidas (ej: "CREMOS").
+                if (isFallback) {
+                    if(this.currentLang === 'es') {
+                        let lastChar = normalized[normalized.length-1];
+                        if ("AEIOU".includes(lastChar)) {
+                            this.words.add(normalized + "S");
+                        } else if (lastChar === 'Z') {
+                            this.words.add(normalized.slice(0, -1) + "CES");
+                        } else if (lastChar !== 'S') {
+                            this.words.add(normalized + "ES");
+                        }
+                    } else if (this.currentLang === 'en' || this.currentLang === 'fr') {
+                        if (!normalized.endsWith("S")) this.words.add(normalized + "S");
                     }
-                } else if (this.currentLang === 'en' || this.currentLang === 'fr') {
-                    if (!normalized.endsWith("S")) this.words.add(normalized + "S");
                 }
             }
         });
