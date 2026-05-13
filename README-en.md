@@ -1,5 +1,7 @@
 *Read this in other languages: [Español](README.md), [English](README-en.md), [Français](README-fr.md)*
 
+![Sletter Cover](./assets/portada.jpg)
+
 # Sletter 🐍🔤
 
 Sletter is an educational browser game that combines the mechanics of the classic **Snake** with the word-building game **Scrabble**.
