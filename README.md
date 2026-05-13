@@ -36,7 +36,7 @@ Al estar estructurado con **ES6 Modules (`import`/`export`)**, abrir el archivo 
 
 1. Clona el repositorio:
    ```bash
-   git clone https://github.com/PabloGGuizar/sletter.git
+   git clone https://github.com/s-letter/s-letter.github.io.git
    ```
 2. Inicia un servidor web local en la carpeta raíz. Puedes usar la extensión **Live Server** de VSCode, o mediante línea de comandos:
    - **Python 3:** `python -m http.server 8000`

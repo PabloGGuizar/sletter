@@ -36,7 +36,7 @@ Le projet est construit sous une architecture modulaire (Frontend ES6) sans util
 
 1. Clonez le dépôt:
    ```bash
-   git clone https://github.com/PabloGGuizar/sletter.git
+   git clone https://github.com/s-letter/s-letter.github.io.git
    ```
 2. Démarrez un serveur web local dans le dossier racine. Vous pouvez utiliser l'extension **Live Server** dans VSCode, ou via la ligne de commande:
    - **Python 3:** `python -m http.server 8000`

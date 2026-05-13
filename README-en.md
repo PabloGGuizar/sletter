@@ -36,7 +36,7 @@ Being structured with **ES6 Modules (`import`/`export`)**, opening the `index.ht
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/PabloGGuizar/sletter.git
+   git clone https://github.com/s-letter/s-letter.github.io.git
    ```
 2. Start a local web server in the root folder. You can use the **Live Server** extension in VSCode, or via command line:
    - **Python 3:** `python -m http.server 8000`
