@@ -4,7 +4,7 @@
 
 # Sletter 🐍🔤
 
-Sletter es un juego educativo de navegador que combina las mecánicas del clásico **Snake** con el juego de formar palabras **Scrabble**. 
+Sletter es un juego educativo de navegador que combina las mecánicas del clásico **Snake** con la formación de palabras. 
 
 El objetivo es mover la serpiente, comer fichas con letras y formar palabras válidas de tres letras o más, evitando colisionar con los bordes o tu propio cuerpo.
 
