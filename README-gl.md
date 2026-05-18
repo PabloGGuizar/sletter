@@ -1,4 +1,4 @@
-*Ler noutros idiomas: [Español](README.md), [English](README-en.md), [Français](README-fr.md), [Galego](README-gl.md), [Català](README-ca.md)*
+*Ler noutros idiomas: [Español](README.md), [English](README-en.md), [Français](README-fr.md), [Galego](README-gl.md), [Català](README-ca.md), [Euskara](README-eu.md)*
 
 ![Sletter Cover](./assets/portada.jpg)
 
@@ -13,12 +13,13 @@ O obxectivo é mover a serpe, comer fichas con letras e formar palabras válidas
 ## Características Principais 🚀
 
 - **Xogo Híbrido:** Mecánica clásica de movemento estilo Snake con validación de dicionario en tempo real.
-- **Multilingüe:** Soporte completo para xogar en cinco idiomas con dicionarios de alta capacidade validados localmente:
+- **Multilingüe:** Soporte completo para xogar en seis idiomas con dicionarios de alta capacidade validados localmente:
   - 🇪🇸 **Español:** 636.598 palabras.
   - 🇺🇸 **Inglés:** 274.937 palabras.
   - 🇫🇷 **Francés:** 336.524 palabras.
   - 💙🟡 **Galego:** 687.447 palabras.
   - 💛🟥 **Catalán:** 891.424 palabras.
+  - 🟢🔴⚪ **Éuscaro:** 864.882 palabras.
 - **Soporte Offline (PWA Ready):** Os dicionarios descárganse a primeira vez e almacénanse no navegador usando **IndexedDB**, permitindo xogar sen conexión a internet posteriormente.
 - **Motor de Audio Retro:** Efectos de son de 8 bits sintetizados dinámicamente mediante a **Web Audio API** (sen depender de ficheiros `.mp3` ou `.wav` externos).
 - **Ranking Global:** Sistema de récords locais (`localStorage`) que garda as túas mellores puntuacións co teu alias e a bandeira do idioma xogado.
@@ -56,6 +57,7 @@ Os extensos dicionarios integrados en **Sletter** foron posibles grazas a proxec
 - **Francés (336k palabras):** [github.com/words/an-array-of-french-words](https://github.com/words/an-array-of-french-words)
 - **Galego (687k palabras):** [github.com/s-letter/an-array-of-galician-words](https://github.com/s-letter/an-array-of-galician-words)
 - **Catalán (891k palabras):** [github.com/s-letter/an-array-of-catalan-words](https://github.com/s-letter/an-array-of-catalan-words)
+- **Éuscaro (864k palabras):** [github.com/s-letter/an-array-of-basque-words](https://github.com/s-letter/an-array-of-basque-words)
 
 ## Autor 👨‍💻
 

@@ -1,4 +1,4 @@
-*Llegir en altres idiomes: [Español](README.md), [English](README-en.md), [Français](README-fr.md), [Galego](README-gl.md), [Català](README-ca.md)*
+*Llegir en altres idiomes: [Español](README.md), [English](README-en.md), [Français](README-fr.md), [Galego](README-gl.md), [Català](README-ca.md), [Euskara](README-eu.md)*
 
 ![Sletter Cover](./assets/portada.jpg)
 
@@ -13,12 +13,13 @@ L'objectiu és moure la serp, menjar fitxes amb lletres i formar paraules vàlid
 ## Característiques Principals 🚀
 
 - **Joc Híbrid:** Mecànica clàssica de moviment estil Snake amb validació de diccionari en temps real.
-- **Multilingüe:** Suport complet per jugar en cinc idiomes amb diccionaris d'alta capacitat validats localment:
+- **Multilingüe:** Suport complet per jugar en sis idiomes amb diccionaris d'alta capacitat validats localment:
   - 🇪🇸 **Espanyol:** 636.598 paraules.
   - 🇺🇸 **Anglès:** 274.937 paraules.
   - 🇫🇷 **Francès:** 336.524 paraules.
   - 💙🟡 **Gallec:** 687.447 paraules.
   - 💛🟥 **Català:** 891.424 paraules.
+  - 🟢🔴⚪ **Basc:** 864.882 paraules.
 - **Suport Offline (PWA Ready):** Els diccionaris es descarreguen la primera vegada i s'emmagatzemen al navegador usant **IndexedDB**, permetent jugar sense connexió a internet posteriorment.
 - **Motor d'Àudio Retro:** Efectes de so de 8 bits sintetitzats dinàmicament mitjançant la **Web Audio API** (sense dependre de fitxers `.mp3` o `.wav` externs).
 - **Rànquing Global:** Sistema de rècords locals (`localStorage`) que desa les teves millors puntuacions amb el teu àlies i la bandera de l'idioma jugat.
@@ -56,6 +57,7 @@ Els extensos diccionaris integrats a **Sletter** han estat possibles gràcies a 
 - **Francès (336k paraules):** [github.com/words/an-array-of-french-words](https://github.com/words/an-array-of-french-words)
 - **Gallec (687k paraules):** [github.com/s-letter/an-array-of-galician-words](https://github.com/s-letter/an-array-of-galician-words)
 - **Català (891k paraules):** [github.com/s-letter/an-array-of-catalan-words](https://github.com/s-letter/an-array-of-catalan-words)
+- **Basc (864k paraules):** [github.com/s-letter/an-array-of-basque-words](https://github.com/s-letter/an-array-of-basque-words)
 
 ## Autor 👨‍💻
 

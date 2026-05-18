@@ -1,4 +1,4 @@
-*Leer en otros idiomas: [Español](README.md), [English](README-en.md), [Français](README-fr.md), [Galego](README-gl.md), [Català](README-ca.md)*
+*Leer en otros idiomas: [Español](README.md), [English](README-en.md), [Français](README-fr.md), [Galego](README-gl.md), [Català](README-ca.md), [Euskara](README-eu.md)*
 
 ![Sletter Cover](./assets/portada.jpg)
 
@@ -13,12 +13,13 @@ El objetivo es mover la serpiente, comer fichas con letras y formar palabras vá
 ## Características Principales 🚀
 
 - **Híbrido de Juego:** Mecánica clásica de movimiento estilo Snake con validación de diccionario en tiempo real.
-- **Multilingüe:** Soporte completo para jugar en cinco idiomas con diccionarios de alta capacidad validados localmente:
+- **Multilingüe:** Soporte completo para jugar en seis idiomas con diccionarios de alta capacidad validados localmente:
   - 🇪🇸 **Español:** 636,598 palabras.
   - 🇺🇸 **Inglés:** 274,937 palabras.
   - 🇫🇷 **Francés:** 336,524 palabras.
   - 💙🟡 **Gallego:** 687,447 palabras.
   - 💛🟥 **Catalán:** 891,424 palabras.
+  - 🟢🔴⚪ **Euskera:** 864,882 palabras.
 - **Soporte Offline (PWA Ready):** Los diccionarios se descargan la primera vez y se almacenan en el navegador utilizando **IndexedDB**, permitiendo jugar sin conexión a internet posteriormente.
 - **Motor de Audio Retro:** Efectos de sonido de 8-bits sintetizados dinámicamente mediante la **Web Audio API** (sin depender de archivos `.mp3` o `.wav` externos).
 - **Ranking Global:** Sistema de récords locales (`localStorage`) que guarda tus mejores puntuaciones con tu alias y la bandera del idioma jugado.
@@ -56,6 +57,7 @@ Los extensos diccionarios integrados en **Sletter** han sido posibles gracias a 
 - **Francés (336k palabras):** [github.com/words/an-array-of-french-words](https://github.com/words/an-array-of-french-words)
 - **Gallego (687k palabras):** [github.com/s-letter/an-array-of-galician-words](https://github.com/s-letter/an-array-of-galician-words)
 - **Catalán (891k palabras):** [github.com/s-letter/an-array-of-catalan-words](https://github.com/s-letter/an-array-of-catalan-words)
+- **Euskera (864k palabras):** [github.com/s-letter/an-array-of-basque-words](https://github.com/s-letter/an-array-of-basque-words)
 
 ## Autor 👨‍💻
 
