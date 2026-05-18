@@ -1,4 +1,4 @@
-*Read this in other languages: [Español](README.md), [English](README-en.md), [Français](README-fr.md)*
+*Read this in other languages: [Español](README.md), [English](README-en.md), [Français](README-fr.md), [Galego](README-gl.md), [Català](README-ca.md)*
 
 ![Sletter Cover](./assets/portada.jpg)
 
@@ -13,10 +13,12 @@ The goal is to move the snake, eat tiles with letters, and form valid words of t
 ## Key Features 🚀
 
 - **Hybrid Gameplay:** Classic Snake movement mechanics with real-time dictionary validation.
-- **Multilingual:** Full support to play in three languages with locally validated high-capacity dictionaries:
+- **Multilingual:** Full support to play in five languages with locally validated high-capacity dictionaries:
   - 🇪🇸 **Spanish:** 636,598 words.
   - 🇺🇸 **English:** 274,937 words.
   - 🇫🇷 **French:** 336,524 words.
+  - 💙🟡 **Galician:** 687,447 words.
+  - 💛🟥 **Catalan:** 891,424 words.
 - **Offline Support (PWA Ready):** Dictionaries are downloaded the first time and stored in the browser using **IndexedDB**, allowing you to play offline afterwards.
 - **Retro Audio Engine:** 8-bit sound effects dynamically synthesized using the **Web Audio API** (without relying on external `.mp3` or `.wav` files).
 - **Global Ranking:** Local records system (`localStorage`) that saves your best scores with your alias and the flag of the played language.
@@ -52,6 +54,8 @@ The extensive dictionaries integrated into **Sletter** have been made possible t
 - **Spanish (636k words):** [github.com/words/an-array-of-spanish-words](https://github.com/words/an-array-of-spanish-words)
 - **English (274k words):** [github.com/words/an-array-of-english-words](https://github.com/words/an-array-of-english-words)
 - **French (336k words):** [github.com/words/an-array-of-french-words](https://github.com/words/an-array-of-french-words)
+- **Galician (687k words):** [github.com/s-letter/an-array-of-galician-words](https://github.com/s-letter/an-array-of-galician-words)
+- **Catalan (891k words):** [github.com/s-letter/an-array-of-catalan-words](https://github.com/s-letter/an-array-of-catalan-words)
 
 ## Author 👨‍💻
 

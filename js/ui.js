@@ -205,7 +205,9 @@ class UIManager {
         const errorMsg = {
             es: 'Error al cargar el diccionario. Revisa tu conexión.',
             en: 'Failed to load dictionary. Check your connection.',
-            fr: 'Erreur de chargement du dictionnaire. Vérifiez votre connexion.'
+            fr: 'Erreur de chargement du dictionnaire. Vérifiez votre connexion.',
+            gl: 'Erro ao cargar o dicionario. Comproba a túa conexión.',
+            ca: 'Error en carregar el diccionari. Comprova la teva connexió.'
         };
         this.startBtn.innerText = errorMsg[lang] || errorMsg.es;
         this.startBtn.disabled = true;
@@ -277,7 +279,7 @@ class UIManager {
             return;
         }
 
-        const flags = { es: '🇪🇸', en: '🇺🇸', fr: '🇫🇷' };
+        const flags = { es: '🇪🇸', en: '🇺🇸', fr: '🇫🇷', gl: '💙🟡', ca: '💛🟥' };
 
         records.forEach((rec, i) => {
             const div = document.createElement('div');

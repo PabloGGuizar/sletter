@@ -1,0 +1,21 @@
+{
+    "subtitle": "Només es validen les paraules unides a la teva <strong>Cua</strong>. Si menges una lletra equivocada, bloquejarà la teva paraula.",
+    "loading": "Carregant diccionari...",
+    "playNow": "Jugar Ara",
+    "playOffline": "Jugar (Mode Sense Connexió)",
+    "move": "Moure's",
+    "submit": "Validar",
+    "orderTitle": "Ordre de les Lletres Menjades",
+    "headTail": "<span>(Cap / Antiga)</span> <span>(Cua / Recent)</span>",
+    "eatTiles": "Menja fitxes...",
+    "submitBtn": "Validar Paraula",
+    "foundWords": "Paraules Formades",
+    "noWords": "Cap paraula encara",
+    "gameOver": "Joc Acabat!",
+    "scoreMsg": "Puntuació final: <strong>{score}</strong><br>Paraules formades: {count}",
+    "playAgain": "Tornar a Jugar",
+    "helpTitle": "Instruccions",
+    "helpText": "<ul class=\"list-disc pl-5 space-y-2\"><li>Mou la serp fent servir les <b>fletxes</b>, <b>WASD</b>, o lliscant.</li><li>Menja fitxes per afegir lletres a la teva <b>cua</b>.</li><li>Forma paraules vàlides de 3 o més lletres que acabin a la punta de la teva cua.</li><li>Prem <b>Espai</b> (o el botó Validar) per canviar la teva paraula per punts i reduir la teva mida.</li><li>Si menges una lletra equivocada, la teva paraula quedarà <b>bloquejada</b>. Has d'usar aquesta lletra errònia per formar una nova paraula i alliberar-te.</li><li>¡Passa les teves lletres pels multiplicadors (<b>x2 L</b>, <b>x3 P</b>) al taulell en el moment de validar per multiplicar la teva puntuació!</li><li><b>Diccionaris Locals:</b> Català (~891k), Espanyol (636k), Anglès (274k), Francès (336k) i Gallec (~687k) paraules validades.</li></ul>",
+    "footer": "&copy; 2026 Sletter &mdash; Desenvolupat per <a href='https://www.linkedin.com/in/pablogguizar/' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>Pablo G. Guízar</a>. Codi obert sota llicència MIT disponible a <a href='https://github.com/s-letter/s-letter.github.io' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>GitHub</a>.",
+    "recordsTitle": "Millors Rècords Locals"
+}

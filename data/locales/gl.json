@@ -1,0 +1,21 @@
+{
+    "subtitle": "Só se validan as palabras unidas á túa <strong>Cola</strong>. Se comes unha letra equivocada, bloqueará a túa palabra.",
+    "loading": "Cargando dicionario...",
+    "playNow": "Xogar Agora",
+    "playOffline": "Xogar (Modo Sen Conexión)",
+    "move": "Moverse",
+    "submit": "Validar",
+    "orderTitle": "Orde das Letras Comidas",
+    "headTail": "<span>(Cabeza / Antiga)</span> <span>(Cola / Recente)</span>",
+    "eatTiles": "Come fichas...",
+    "submitBtn": "Validar Palabra",
+    "foundWords": "Palabras Formadas",
+    "noWords": "Ningunha palabra aínda",
+    "gameOver": "¡Xogo Rematado!",
+    "scoreMsg": "Puntuación final: <strong>{score}</strong><br>Palabras formadas: {count}",
+    "playAgain": "Xogar de Novo",
+    "helpTitle": "Instrucións",
+    "helpText": "<ul class=\"list-disc pl-5 space-y-2\"><li>Move a serpe usando as <b>frechas</b>, <b>WASD</b>, ou deslizando.</li><li>Come fichas para engadir letras á túa <b>cola</b>.</li><li>Forma palabras válidas de 3 ou máis letras que rematen na punta da túa cola.</li><li>Preme <b>Espazo</b> (ou o botón Validar) para canjear a túa palabra por puntos e reducir o teu tamaño.</li><li>Se te equivocas de letra, a túa palabra quedará <b>bloqueada</b>. Debes usar esa letra errónea para formar unha nova palabra e liberarte.</li><li>¡Pasa as túas letras polos multiplicadores (<b>x2 L</b>, <b>x3 P</b>) no taboleiro ao momento de validar para multiplicar a túa puntuación!</li><li><b>Dicionarios Locais:</b> Galego (~687k), Español (636k), Inglés (274k), Francés (336k) e Catalán (~891k) palabras validadas.</li></ul>",
+    "footer": "&copy; 2026 Sletter &mdash; Desenvolvido por <a href='https://www.linkedin.com/in/pablogguizar/' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>Pablo G. Guízar</a>. Código aberto baixo licenza MIT dispoñible en <a href='https://github.com/s-letter/s-letter.github.io' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>GitHub</a>.",
+    "recordsTitle": "Mellores Récords Locais"
+}

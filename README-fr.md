@@ -1,4 +1,4 @@
-*Lire dans d'autres langues: [Español](README.md), [English](README-en.md), [Français](README-fr.md)*
+*Lire dans d'autres langues: [Español](README.md), [English](README-en.md), [Français](README-fr.md), [Galego](README-gl.md), [Català](README-ca.md)*
 
 ![Sletter Cover](./assets/portada.jpg)
 
@@ -13,10 +13,12 @@ L'objectif est de déplacer le serpent, de manger des tuiles avec des lettres et
 ## Caractéristiques Principales 🚀
 
 - **Jeu Hybride:** Mécanique classique de mouvement Snake avec validation de dictionnaire en temps réel.
-- **Multilingue:** Support complet pour jouer en trois langues avec des dictionnaires de haute capacité validés localement:
+- **Multilingue:** Support complet pour jouer en cinq langues avec des dictionnaires de haute capacité validés localement:
   - 🇪🇸 **Espagnol:** 636 598 mots.
   - 🇺🇸 **Anglais:** 274 937 mots.
   - 🇫🇷 **Français:** 336 524 mots.
+  - 💙🟡 **Galicien:** 687 447 mots.
+  - 💛🟥 **Catalan:** 891 424 mots.
 - **Support Hors Ligne (PWA Ready):** Les dictionnaires sont téléchargés la première fois et stockés dans le navigateur en utilisant **IndexedDB**, vous permettant de jouer sans connexion Internet par la suite.
 - **Moteur Audio Rétro:** Effets sonores 8 bits synthétisés dynamiquement via la **Web Audio API** (sans dépendre de fichiers `.mp3` ou `.wav` externes).
 - **Classement Global:** Système de records locaux (`localStorage`) qui enregistre vos meilleurs scores avec votre pseudo et le drapeau de la langue jouée.
@@ -52,6 +54,8 @@ Les vastes dictionnaires intégrés dans **Sletter** ont été rendus possibles 
 - **Espagnol (636k mots):** [github.com/words/an-array-of-spanish-words](https://github.com/words/an-array-of-spanish-words)
 - **Anglais (274k mots):** [github.com/words/an-array-of-english-words](https://github.com/words/an-array-of-english-words)
 - **Français (336k mots):** [github.com/words/an-array-of-french-words](https://github.com/words/an-array-of-french-words)
+- **Galicien (687k mots):** [github.com/s-letter/an-array-of-galician-words](https://github.com/s-letter/an-array-of-galician-words)
+- **Catalan (891k mots):** [github.com/s-letter/an-array-of-catalan-words](https://github.com/s-letter/an-array-of-catalan-words)
 
 ## Auteur 👨‍💻
 
