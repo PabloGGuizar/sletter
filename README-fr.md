@@ -14,15 +14,15 @@ L'objectif est de déplacer le serpent, de manger des tuiles avec des lettres et
 
 - **Jeu Hybride:** Mécanique classique de mouvement Snake avec validation de dictionnaire en temps réel.
 - **Multilingue:** Support complet pour jouer en six langues avec des dictionnaires de haute capacité validés localement:
-  - 🇪🇸 **Espagnol:** 636 598 mots.
-  - 🇺🇸 **Anglais:** 274 937 mots.
-  - 🇫🇷 **Français:** 336 524 mots.
-  - 💙🟡 **Galicien:** 687 447 mots.
-  - 💛🟥 **Catalan:** 891 424 mots.
-  - 🟢🔴⚪ **Basque:** 864 882 mots.
+  - **Espagnol:** 636 598 mots.
+  - **Anglais:** 274 937 mots.
+  - **Français:** 336 524 mots.
+  - **Galicien:** 687 447 mots.
+  - **Catalan:** 891 424 mots.
+  - **Basque:** 864 882 mots.
 - **Support Hors Ligne (PWA Ready):** Les dictionnaires sont téléchargés la première fois et stockés dans le navigateur en utilisant **IndexedDB**, vous permettant de jouer sans connexion Internet par la suite.
 - **Moteur Audio Rétro:** Effets sonores 8 bits synthétisés dynamiquement via la **Web Audio API** (sans dépendre de fichiers `.mp3` ou `.wav` externes).
-- **Classement Global:** Système de records locaux (`localStorage`) qui enregistre vos meilleurs scores avec votre pseudo et le drapeau de la langue jouée.
+- **Classement Global:** Système de records locaux (`localStorage`) qui enregistre vos meilleurs scores avec votre pseudo et l'abréviation de la langue jouée.
 - **Personnalisation Visuelle:** Support responsive et thèmes Clair/Sombre dynamiques.
 
 ## Architecture et Technologies 🏗️

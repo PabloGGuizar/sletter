@@ -14,15 +14,15 @@ L'objectiu és moure la serp, menjar fitxes amb lletres i formar paraules vàlid
 
 - **Joc Híbrid:** Mecànica clàssica de moviment estil Snake amb validació de diccionari en temps real.
 - **Multilingüe:** Suport complet per jugar en sis idiomes amb diccionaris d'alta capacitat validats localment:
-  - 🇪🇸 **Espanyol:** 636.598 paraules.
-  - 🇺🇸 **Anglès:** 274.937 paraules.
-  - 🇫🇷 **Francès:** 336.524 paraules.
-  - 💙🟡 **Gallec:** 687.447 paraules.
-  - 💛🟥 **Català:** 891.424 paraules.
-  - 🟢🔴⚪ **Basc:** 864.882 paraules.
+  - **Espanyol:** 636.598 paraules.
+  - **Anglès:** 274.937 paraules.
+  - **Francès:** 336.524 paraules.
+  - **Gallec:** 687.447 paraules.
+  - **Català:** 891.424 paraules.
+  - **Basc:** 864.882 paraules.
 - **Suport Offline (PWA Ready):** Els diccionaris es descarreguen la primera vegada i s'emmagatzemen al navegador usant **IndexedDB**, permetent jugar sense connexió a internet posteriorment.
 - **Motor d'Àudio Retro:** Efectes de so de 8 bits sintetitzats dinàmicament mitjançant la **Web Audio API** (sense dependre de fitxers `.mp3` o `.wav` externs).
-- **Rànquing Global:** Sistema de rècords locals (`localStorage`) que desa les teves millors puntuacions amb el teu àlies i la bandera de l'idioma jugat.
+- **Rànquing Global:** Sistema de rècords locals (`localStorage`) que desa les teves millors puntuacions amb el teu àlies i la abreviatura de l'idioma jugat.
 - **Personalització Visual:** Suport responsiu i temes Clar/Fosc dinàmics.
 
 ## Arquitectura i Tecnologies 🏗️

@@ -14,15 +14,15 @@ O obxectivo é mover a serpe, comer fichas con letras e formar palabras válidas
 
 - **Xogo Híbrido:** Mecánica clásica de movemento estilo Snake con validación de dicionario en tempo real.
 - **Multilingüe:** Soporte completo para xogar en seis idiomas con dicionarios de alta capacidade validados localmente:
-  - 🇪🇸 **Español:** 636.598 palabras.
-  - 🇺🇸 **Inglés:** 274.937 palabras.
-  - 🇫🇷 **Francés:** 336.524 palabras.
-  - 💙🟡 **Galego:** 687.447 palabras.
-  - 💛🟥 **Catalán:** 891.424 palabras.
-  - 🟢🔴⚪ **Éuscaro:** 864.882 palabras.
+  - **Español:** 636.598 palabras.
+  - **Inglés:** 274.937 palabras.
+  - **Francés:** 336.524 palabras.
+  - **Galego:** 687.447 palabras.
+  - **Catalán:** 891.424 palabras.
+  - **Éuscaro:** 864.882 palabras.
 - **Soporte Offline (PWA Ready):** Os dicionarios descárganse a primeira vez e almacénanse no navegador usando **IndexedDB**, permitindo xogar sen conexión a internet posteriormente.
 - **Motor de Audio Retro:** Efectos de son de 8 bits sintetizados dinámicamente mediante a **Web Audio API** (sen depender de ficheiros `.mp3` ou `.wav` externos).
-- **Ranking Global:** Sistema de récords locais (`localStorage`) que garda as túas mellores puntuacións co teu alias e a bandeira do idioma xogado.
+- **Ranking Global:** Sistema de récords locais (`localStorage`) que garda as túas mellores puntuacións co teu alias e a abreviatura do idioma xogado.
 - **Personalización Visual:** Soporte responsivo e temas Claro/Escuro dinámicos.
 
 ## Arquitectura e Tecnoloxías 🏗️

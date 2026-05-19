@@ -14,15 +14,15 @@ Helburua sugea mugitzea, letrak dituzten fitxak jatea eta hiru letra edo gehiago
 
 - **Joko Hibridoa:** Snake estiloko mugimendu klasikoa eta denbora errealean hiztegi bidezko baliozkotzea.
 - **Eleanitza:** Sei hizkuntzatan jolasteko laguntza osoa, tokiko baliozkotzea duten edukiera handiko hiztegiekin:
-  - 🇪🇸 **Espainiera:** 636.598 hitz.
-  - 🇺🇸 **Ingelesa:** 274.937 hitz.
-  - 🇫🇷 **Frantsesa:** 336.524 hitz.
-  - 💙🟡 **Galiziera:** 687.447 hitz.
-  - 💛🟥 **Katalana:** 891.424 hitz.
-  - 🟢🔴⚪ **Euskara:** 864.882 hitz.
+  - **Espainiera:** 636.598 hitz.
+  - **Ingelesa:** 274.937 hitz.
+  - **Frantsesa:** 336.524 hitz.
+  - **Galiziera:** 687.447 hitz.
+  - **Katalana:** 891.424 hitz.
+  - **Euskara:** 864.882 hitz.
 - **Lineaz Kanpoko Jolasa (PWA Ready):** Hiztegiak lehenengo aldian deskargatu eta nabigatzailean gordetzen dira **IndexedDB** erabiliz, ondoren internetik gabe jolasteko aukera emanez.
 - **Audio Motor Retroa:** 8 biteko soinu-efektuak dinamikoki sintetizatzen dira **Web Audio API** bidez (kanpoko `.mp3` edo `.wav` fitxategien beharrik gabe).
-- **Mundu Mailako Sailkapena:** Tokiko errekorren sistema (`localStorage`), zure puntuazio onenak, zure aliasa eta jokatutako hizkuntzaren bandera gordetzen dituena.
+- **Mundu Mailako Sailkapena:** Tokiko errekorren sistema (`localStorage`), zure puntuazio onenak, zure aliasa eta jokatutako hizkuntzaren laburdura gordetzen dituena.
 - **Pertsonalizazio Bisuala:** Diseinu moldakorra eta Gai Argi/Ilun dinamikoak.
 
 ## Arkitektura eta Teknologiak 🏗️

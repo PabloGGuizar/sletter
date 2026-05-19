@@ -14,15 +14,15 @@ The goal is to move the snake, eat tiles with letters, and form valid words of t
 
 - **Hybrid Gameplay:** Classic Snake movement mechanics with real-time dictionary validation.
 - **Multilingual:** Full support to play in six languages with locally validated high-capacity dictionaries:
-  - 🇪🇸 **Spanish:** 636,598 words.
-  - 🇺🇸 **English:** 274,937 words.
-  - 🇫🇷 **French:** 336,524 words.
-  - 💙🟡 **Galician:** 687,447 words.
-  - 💛🟥 **Catalan:** 891,424 words.
-  - 🟢🔴⚪ **Basque:** 864,882 words.
+  - **Spanish:** 636,598 words.
+  - **English:** 274,937 words.
+  - **French:** 336,524 words.
+  - **Galician:** 687,447 words.
+  - **Catalan:** 891,424 words.
+  - **Basque:** 864,882 words.
 - **Offline Support (PWA Ready):** Dictionaries are downloaded the first time and stored in the browser using **IndexedDB**, allowing you to play offline afterwards.
 - **Retro Audio Engine:** 8-bit sound effects dynamically synthesized using the **Web Audio API** (without relying on external `.mp3` or `.wav` files).
-- **Global Ranking:** Local records system (`localStorage`) that saves your best scores with your alias and the flag of the played language.
+- **Global Ranking:** Local records system (`localStorage`) that saves your best scores with your alias and the abbreviation of the played language.
 - **Visual Customization:** Responsive support and dynamic Light/Dark themes.
 
 ## Architecture and Technologies 🏗️

@@ -280,13 +280,11 @@ class UIManager {
             return;
         }
 
-        const flags = { es: '🇪🇸', en: '🇺🇸', fr: '🇫🇷', gl: '💙🟡', ca: '💛🟥', eu: '🟢🔴⚪' };
-
         records.forEach((rec, i) => {
             const div = document.createElement('div');
             div.className = 'flex justify-between items-center text-[10px] bg-slate-50 dark:bg-slate-700 p-1 rounded font-medium text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600';
-            const flag = flags[rec.lang] || '🏳️';
-            div.innerHTML = `<span class="truncate pr-2" title="${rec.alias}">#${i+1} ${flag} ${rec.alias}</span> <span class="text-indigo-600 dark:text-indigo-400 font-bold shrink-0">${rec.points} pts</span>`;
+            const langAbbr = rec.lang.toUpperCase();
+            div.innerHTML = `<span class="truncate pr-2" title="${rec.alias}">#${i+1} [${langAbbr}] ${rec.alias}</span> <span class="text-indigo-600 dark:text-indigo-400 font-bold shrink-0">${rec.points} pts</span>`;
             this.recordsContainer.appendChild(div);
         });
     }
