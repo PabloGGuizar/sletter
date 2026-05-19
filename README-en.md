@@ -10,6 +10,16 @@ The goal is to move the snake, eat tiles with letters, and form valid words of t
 
 ![Sletter UI Screenshot](./assets/Sletter%20UI%20Screenshot.png)
 
+## How to Play & Scoring 🎮
+
+- **Movement:** Use **Arrows**, **WASD**, or swipe on touch screens.
+- **Goal:** Eat tiles to add letters to your tail. Form valid words of 3 or more letters ending at the tip of your tail. If you eat a wrong letter, your word is blocked until you use it in a new one.
+- **Points Calculation:**
+  - You get **+1 point** automatically for every tile you eat.
+  - When submitting a word (with **Space** or the button), each letter adds its **base value**.
+  - The **multiplier cells** on the board apply if you place your letters over them when submitting. They affect the specific letter (**x2 L**, **x3 L**) or the entire word (**x2 W**, **x3 W**).
+  - The total score is multiplied by a bonus depending on the word's **length** (e.g., 4 letters = x2, 5 letters = x3).
+
 ## Key Features 🚀
 
 - **Hybrid Gameplay:** Classic Snake movement mechanics with real-time dictionary validation.

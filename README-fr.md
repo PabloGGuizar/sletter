@@ -10,6 +10,16 @@ L'objectif est de déplacer le serpent, de manger des tuiles avec des lettres et
 
 ![Sletter UI Screenshot](./assets/Sletter%20UI%20Screenshot.png)
 
+## Comment Jouer et Notation 🎮
+
+- **Déplacement:** Utilisez les **Flèches**, **WASD**, ou glissez sur les écrans tactiles.
+- **Objectif:** Mangez des tuiles pour ajouter des lettres à votre queue. Formez des mots valides de 3 lettres ou plus se terminant à la pointe de votre queue. Si vous mangez une mauvaise lettre, votre mot est bloqué jusqu'à ce que vous l'utilisiez dans un nouveau mot.
+- **Calcul des Points:**
+  - Vous obtenez **+1 point** automatiquement pour chaque tuile mangée.
+  - Lors de la validation (avec **Espace** ou le bouton), chaque lettre ajoute sa **valeur de base**.
+  - Les **cases multiplicatrices** du plateau s'appliquent si vous placez vos lettres dessus lors de la validation. Elles affectent la lettre spécifique (**x2 L**, **x3 L**) ou le mot entier (**x2 M**, **x3 M**).
+  - Le score total est multiplié par un bonus en fonction de la **longueur** du mot (ex. 4 lettres = x2, 5 lettres = x3).
+
 ## Caractéristiques Principales 🚀
 
 - **Jeu Hybride:** Mécanique classique de mouvement Snake avec validation de dictionnaire en temps réel.

@@ -10,6 +10,16 @@ El objetivo es mover la serpiente, comer fichas con letras y formar palabras vá
 
 ![Sletter UI Screenshot](./assets/Sletter%20UI%20Screenshot.png)
 
+## Cómo Jugar y Puntuación 🎮
+
+- **Movimiento:** Usa las **flechas**, **WASD**, o desliza en pantallas táctiles.
+- **Objetivo:** Come fichas para añadir letras a tu cola. Debes formar palabras válidas de 3 o más letras que terminen en la punta de tu cola. Si te equivocas de letra, la palabra se bloquea hasta que la uses en una nueva.
+- **Cálculo de Puntos:**
+  - Obtienes **+1 punto** automáticamente al comer cualquier ficha.
+  - Al validar una palabra (con **Espacio** o el botón), cada letra suma su **valor base**.
+  - Las **casillas multiplicadoras** del tablero se aplican si colocas tus letras sobre ellas al momento de validar. Afectan a la letra (**x2 L**, **x3 L**) o a la palabra entera (**x2 P**, **x3 P**).
+  - El puntaje total se multiplica por un bono según la **longitud** de la palabra (ej. 4 letras = x2, 5 letras = x3).
+
 ## Características Principales 🚀
 
 - **Híbrido de Juego:** Mecánica clásica de movimiento estilo Snake con validación de diccionario en tiempo real.

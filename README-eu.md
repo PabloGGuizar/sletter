@@ -10,6 +10,16 @@ Helburua sugea mugitzea, letrak dituzten fitxak jatea eta hiru letra edo gehiago
 
 ![Sletter UI Screenshot](./assets/Sletter%20UI%20Screenshot.png)
 
+## Nola Jolastu eta Puntuazioa 🎮
+
+- **Mugimendua:** Erabili **geziak**, **WASD**, edo irristatu ukipen-pantailetan.
+- **Helburua:** Jan fitxak letrak zure buztanari gehitzeko. 3 letra edo gehiagoko hitz baliodunak osatu behar dituzu, buztanaren puntan amaituz. Letra oker bat jaten baduzu, hitza blokeatu egingo da berri batean erabili arte.
+- **Puntuazioaren Kalkulua:**
+  - Automatikoki **+1 puntu** lortzen duzu jandako fitxa bakoitzeko.
+  - Hitza baliozkotzean (**Zuriunea** edo botoiarekin), letra bakoitzak bere **oinarrizko balioa** gehitzen du.
+  - Taulako **lauki biderkatzaileak** aplikatuko dira baliozkotzean letrak haien gainean jartzen badituzu. Letrari (**x2 L**, **x3 L**) edo hitz osoari (**x2 H**, **x3 H**) eragiten diote.
+  - Puntuazio osoa hitzaren **luzeraren** araberako hobari batez biderkatzen da (adibidez, 4 letra = x2, 5 letra = x3).
+
 ## Ezaugarri Nagusiak 🚀
 
 - **Joko Hibridoa:** Snake estiloko mugimendu klasikoa eta denbora errealean hiztegi bidezko baliozkotzea.

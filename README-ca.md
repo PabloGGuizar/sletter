@@ -10,6 +10,16 @@ L'objectiu és moure la serp, menjar fitxes amb lletres i formar paraules vàlid
 
 ![Sletter UI Screenshot](./assets/Sletter%20UI%20Screenshot.png)
 
+## Com Jugar i Puntuació 🎮
+
+- **Moviment:** Utilitza les **fletxes**, **WASD**, o llisca a les pantalles tàctils.
+- **Objectiu:** Menja fitxes per afegir lletres a la teva cua. Has de formar paraules vàlides de 3 o més lletres que acabin a la punta de la teva cua. Si menges una lletra equivocada, la paraula es bloqueja fins que la facis servir en una nova.
+- **Càlcul de Punts:**
+  - Obteniu **+1 punt** automàticament per cada fitxa menjada.
+  - En validar una paraula (amb **Espai** o el botó), cada lletra suma el seu **valor base**.
+  - Les **caselles multiplicadores** del taulell s'apliquen si col·loques les teves lletres sobre elles en el moment de validar. Afecten la lletra (**x2 L**, **x3 L**) o la paraula sencera (**x2 P**, **x3 P**).
+  - La puntuació total es multiplica per un bo segons la **longitud** de la paraula (ex. 4 lletres = x2, 5 lletres = x3).
+
 ## Característiques Principals 🚀
 
 - **Joc Híbrid:** Mecànica clàssica de moviment estil Snake amb validació de diccionari en temps real.
