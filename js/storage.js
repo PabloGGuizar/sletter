@@ -4,6 +4,8 @@ import { eventBus } from './events.js';
 class StorageManager {
     constructor() {
         this.records = this.loadRecords();
+        this.alias = this.loadAlias();
+        this.token = this.loadToken();
     }
 
     loadRecords() {
@@ -15,7 +17,7 @@ class StorageManager {
                 console.error("Error parsing records", e);
             }
         }
-        return { es: [], en: [], fr: [] };
+        return { es: [], en: [], fr: [], gl: [], ca: [], eu: [] };
     }
 
     saveRecord(lang, points, alias) {
@@ -30,7 +32,7 @@ class StorageManager {
             alias: alias || 'Anónimo'
         });
 
-        // Ordenar de mayor a menor y mantener el top 20 por idioma para tener margen en el global
+        // Ordenar de mayor a menor y mantener el top 20 por idioma
         this.records[lang].sort((a, b) => b.points - a.points);
         this.records[lang] = this.records[lang].slice(0, 20);
 
@@ -51,9 +53,45 @@ class StorageManager {
     }
 
     clearRecords() {
-        this.records = { es: [], en: [], fr: [] };
+        this.records = { es: [], en: [], fr: [], gl: [], ca: [], eu: [] };
         localStorage.removeItem('sletter_records');
         eventBus.emit('RECORDS_UPDATED', this.getTopGlobal());
+    }
+
+    // --- Global Logic ---
+    loadAlias() {
+        return localStorage.getItem('sletter_alias') || '';
+    }
+
+    getAlias() {
+        return this.alias;
+    }
+
+    setAlias(newAlias) {
+        this.alias = newAlias;
+        localStorage.setItem('sletter_alias', newAlias);
+        if (!this.token) {
+            this.generateToken();
+        }
+    }
+
+    loadToken() {
+        return localStorage.getItem('sletter_token') || '';
+    }
+
+    getToken() {
+        return this.token;
+    }
+
+    generateToken() {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let randStr = '';
+        for (let i = 0; i < 12; i++) {
+            randStr += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        this.token = 'sletter_' + randStr;
+        localStorage.setItem('sletter_token', this.token);
+        return this.token;
     }
 }
 

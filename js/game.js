@@ -111,6 +111,8 @@ export class GameEngine {
         this.generateMultipliers();
         while(this.tiles.length < 7) this.spawnTile();
         
+        this.gameStartTime = new Date().getTime();
+
         eventBus.emit('SCORE_UPDATED', this.score);
         eventBus.emit('LETTERS_UPDATED', this.collectedLetters);
         eventBus.emit('PLAY_SOUND', 'start');
@@ -311,8 +313,12 @@ export class GameEngine {
     endGame() {
         this.isGameOver = true;
         this.isGameRunning = false;
+        
+        const endTime = new Date().getTime();
+        const durationSeconds = Math.floor((endTime - this.gameStartTime) / 1000);
+
         eventBus.emit('PLAY_SOUND', 'gameover');
-        eventBus.emit('GAME_OVER', { score: this.score, wordsCount: this.wordsFoundCount });
+        eventBus.emit('GAME_OVER', { score: this.score, wordsCount: this.wordsFoundCount, duration: durationSeconds });
     }
 
     drawGame() {

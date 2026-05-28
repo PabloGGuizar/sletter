@@ -1,6 +1,7 @@
 // js/ui.js
 import { eventBus } from './events.js';
 import { dictionary } from './dictionary.js';
+import { storage } from './storage.js';
 
 class UIManager {
     constructor() {
@@ -32,9 +33,19 @@ class UIManager {
         this.aliasInput = document.getElementById('aliasInput');
         this.saveAliasBtn = document.getElementById('saveAliasBtn');
         this.skipAliasBtn = document.getElementById('skipAliasBtn');
+        this.aliasError = document.getElementById('aliasError');
+        this.privacyInfoBtn = document.getElementById('privacyInfoBtn');
+        this.privacyModal = document.getElementById('privacyModal');
+        this.closePrivacyBtn = document.getElementById('closePrivacyBtn');
+
+        this.tabLocal = document.getElementById('tabLocal');
+        this.tabGlobal = document.getElementById('tabGlobal');
+        this.globalRecordsList = document.getElementById('globalRecordsList');
+        this.globalLangSelect = document.getElementById('globalLangSelect');
 
         this.pendingScore = 0;
         this.currentTexts = null;
+        this.currentGlobalRecords = [];
 
         this.bindEvents();
         this.setupEventListeners();
@@ -65,7 +76,14 @@ class UIManager {
                 helpTitle: "Instrucciones",
                 helpText: "Instrucciones no disponibles.",
                 footer: "Sletter",
-                recordsTitle: "Récords Locales"
+                recordsTitle: "Récords Locales",
+                privacyTitle: "Tratamiento de Información",
+                privacyText: "<p>Al guardar tu puntuación de forma global, aceptas lo siguiente:</p><ul class=\"list-disc pl-5 space-y-1\"><li>Se generará un <strong>token anónimo único</strong> en tu dispositivo que nos permitirá actualizar tu récord sin solicitar datos personales.</li><li>Tu alias y puntuación serán públicos y visibles para todos los jugadores en la tabla de clasificación.</li></ul>",
+                publishGlobal: "Publicar en ranking global",
+                aliasInvalid: "Alias inválido. Solo letras, números y _.",
+                aliasTaken: "Este alias ya está en uso globalmente. Elige otro.",
+                saving: "Guardando...",
+                saveError: "Error de conexión o guardado."
             };
         }
         this.updateStaticUI();
@@ -80,6 +98,9 @@ class UIManager {
         eventBus.on('DICTIONARY_LOADED', (lang) => this.setReadyState(lang));
         eventBus.on('DICTIONARY_ERROR', (lang) => this.setErrorState(lang));
         eventBus.on('RECORDS_UPDATED', records => this.renderRecords(records));
+        eventBus.on('GLOBAL_RECORDS_UPDATED', data => this.renderGlobalRecords(data.records, data.userTokenHash));
+        eventBus.on('SAVE_RECORD_SUCCESS', () => this.handleSaveSuccess());
+        eventBus.on('SAVE_RECORD_ERROR', msg => this.handleSaveError(msg));
     }
 
     setupEventListeners() {
@@ -114,6 +135,18 @@ class UIManager {
         this.closeHelpBtn.addEventListener('click', closeModal);
         this.helpModal.addEventListener('click', (e) => { if(e.target === this.helpModal) closeModal(); });
 
+        this.privacyInfoBtn.addEventListener('click', () => {
+            this.privacyModal.classList.remove('hidden');
+            this.privacyModal.classList.add('flex');
+        });
+        
+        const closePrivacyModal = () => {
+            this.privacyModal.classList.add('hidden');
+            this.privacyModal.classList.remove('flex');
+        };
+        this.closePrivacyBtn.addEventListener('click', closePrivacyModal);
+        this.privacyModal.addEventListener('click', (e) => { if(e.target === this.privacyModal) closePrivacyModal(); });
+
         this.startBtn.addEventListener('click', () => {
             this.wordsListContainer.innerHTML = '';
             eventBus.emit('START_GAME');
@@ -126,37 +159,133 @@ class UIManager {
 
         this.langSelect.addEventListener('change', (e) => {
             eventBus.emit('LANGUAGE_CHANGED', e.target.value);
+            this.globalLangSelect.value = e.target.value;
         });
 
         this.saveAliasBtn.addEventListener('click', () => {
             const alias = this.aliasInput.value.trim() || 'Anónimo';
+            const regex = /^[a-zA-Z0-9_]{1,20}$/;
+            if (alias !== 'Anónimo' && !regex.test(alias)) {
+                this.aliasError.innerText = (this.currentTexts && this.currentTexts.aliasInvalid) ? this.currentTexts.aliasInvalid : 'Alias inválido. Solo letras, números y _.';
+                this.aliasError.classList.remove('hidden');
+                return;
+            }
+            this.aliasError.classList.add('hidden');
+            
             const lang = this.langSelect.value || 'es';
+            const saveGlobal = document.getElementById('globalRankCheckbox').checked;
             
-            eventBus.emit('SAVE_RECORD', { lang, points: this.pendingScore, alias });
-            
+            this.saveAliasBtn.disabled = true;
+            this.saveAliasBtn.innerText = (this.currentTexts && this.currentTexts.saving) ? this.currentTexts.saving : "Guardando...";
+
+            eventBus.emit('SAVE_RECORD', { 
+                lang, 
+                points: this.pendingScore, 
+                alias, 
+                duration: this.pendingDuration,
+                saveGlobal: saveGlobal 
+            });
+        });
+
+        this.skipAliasBtn.addEventListener('click', () => {
+            this.aliasError.classList.add('hidden');
             this.aliasContainer.classList.add('hidden');
             this.aliasContainer.classList.remove('flex');
             this.startBtn.classList.remove('hidden');
         });
 
-        this.skipAliasBtn.addEventListener('click', () => {
-            this.aliasContainer.classList.add('hidden');
-            this.aliasContainer.classList.remove('flex');
-            this.startBtn.classList.remove('hidden');
+        this.tabLocal.addEventListener('click', () => this.switchTab('local'));
+        this.tabGlobal.addEventListener('click', () => {
+            this.switchTab('global');
+            eventBus.emit('FETCH_GLOBAL_RECORDS', this.globalLangSelect.value);
         });
+
+        this.globalLangSelect.addEventListener('change', (e) => {
+            eventBus.emit('FETCH_GLOBAL_RECORDS', e.target.value);
+        });
+    }
+
+    handleSaveSuccess() {
+        this.saveAliasBtn.disabled = false;
+        this.saveAliasBtn.innerText = "Guardar";
+        this.aliasContainer.classList.add('hidden');
+        this.aliasContainer.classList.remove('flex');
+        this.startBtn.classList.remove('hidden');
+    }
+
+    handleSaveError(errorCode) {
+        this.saveAliasBtn.disabled = false;
+        this.saveAliasBtn.innerText = "Guardar";
+        
+        let msg = errorCode;
+        if (errorCode === 'ALIAS_TAKEN') {
+            msg = (this.currentTexts && this.currentTexts.aliasTaken) ? this.currentTexts.aliasTaken : "Este alias ya está en uso globalmente. Elige otro.";
+        } else if (errorCode === 'SAVE_ERROR') {
+            msg = (this.currentTexts && this.currentTexts.saveError) ? this.currentTexts.saveError : "Error de conexión o guardado.";
+        }
+        
+        this.aliasError.innerText = msg;
+        this.aliasError.classList.remove('hidden');
+    }
+
+    switchTab(tab) {
+        if (tab === 'local') {
+            this.tabLocal.classList.add('text-indigo-600', 'dark:text-indigo-400', 'border-indigo-600', 'dark:border-indigo-400');
+            this.tabLocal.classList.remove('text-slate-400', 'border-transparent');
+            this.tabGlobal.classList.remove('text-indigo-600', 'dark:text-indigo-400', 'border-indigo-600', 'dark:border-indigo-400');
+            this.tabGlobal.classList.add('text-slate-400', 'border-transparent');
+            
+            this.recordsContainer.classList.remove('hidden');
+            this.recordsContainer.classList.add('flex');
+            this.globalRecordsList.classList.add('hidden');
+            this.globalRecordsList.classList.remove('flex');
+            
+            this.clearRecordsBtn.classList.remove('hidden');
+            this.globalLangSelect.classList.add('hidden');
+        } else {
+            this.tabGlobal.classList.add('text-indigo-600', 'dark:text-indigo-400', 'border-indigo-600', 'dark:border-indigo-400');
+            this.tabGlobal.classList.remove('text-slate-400', 'border-transparent');
+            this.tabLocal.classList.remove('text-indigo-600', 'dark:text-indigo-400', 'border-indigo-600', 'dark:border-indigo-400');
+            this.tabLocal.classList.add('text-slate-400', 'border-transparent');
+            
+            this.globalRecordsList.classList.remove('hidden');
+            this.globalRecordsList.classList.add('flex');
+            this.recordsContainer.classList.add('hidden');
+            this.recordsContainer.classList.remove('flex');
+            
+            this.clearRecordsBtn.classList.add('hidden');
+            this.globalLangSelect.classList.remove('hidden');
+        }
     }
 
     updateStaticUI() {
         if (!this.currentTexts) return;
         const ui = this.currentTexts;
-        document.getElementById('overlayMessage').innerHTML = ui.subtitle;
-        document.getElementById('lblMove').innerText = ui.move;
-        document.getElementById('lblSubmit').innerText = ui.submit;
-        document.getElementById('lblOrder').innerText = ui.orderTitle;
-        document.getElementById('lblHeadTail').innerHTML = ui.headTail;
-        document.getElementById('lblSubmitBtn').innerText = ui.submitBtn;
-        document.getElementById('lblFound').innerText = ui.foundWords;
-        document.getElementById('lblRecordsTitle').innerText = ui.recordsTitle;
+        
+        const el = (id) => document.getElementById(id);
+        
+        if (el('overlayMessage')) el('overlayMessage').innerHTML = ui.subtitle;
+        if (el('lblMove')) el('lblMove').innerText = ui.move;
+        if (el('lblSubmit')) el('lblSubmit').innerText = ui.submit;
+        if (el('lblOrder')) el('lblOrder').innerText = ui.orderTitle;
+        if (el('lblHeadTail')) el('lblHeadTail').innerHTML = ui.headTail;
+        if (el('lblSubmitBtn')) el('lblSubmitBtn').innerText = ui.submitBtn;
+        if (el('lblFound')) el('lblFound').innerText = ui.foundWords;
+        if (el('lblRecordsTitle')) el('lblRecordsTitle').innerText = ui.recordsTitle;
+        
+        if (ui.privacyTitle) {
+            document.getElementById('lblPrivacyTitle').innerHTML = `
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                ${ui.privacyTitle}
+            `;
+        }
+        if (ui.privacyText) {
+            document.getElementById('lblPrivacyText').innerHTML = ui.privacyText;
+        }
+        
+        if (el('lblPublishGlobal') && ui.publishGlobal) {
+            el('lblPublishGlobal').innerText = ui.publishGlobal;
+        }
         
         document.getElementById('lblHelpTitle').innerHTML = `
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -265,10 +394,38 @@ class UIManager {
         this.startBtn.innerText = ui.playAgain;
         
         this.pendingScore = data.score;
-        this.aliasInput.value = '';
+        this.pendingDuration = data.duration;
+        this.aliasInput.value = storage.getAlias();
+        this.aliasError.classList.add('hidden');
         this.startBtn.classList.add('hidden');
         this.aliasContainer.classList.remove('hidden');
         this.aliasContainer.classList.add('flex');
+        
+        // --- Validación para mostrar/ocultar el Checkbox Global ---
+        const lang = this.langSelect.value || 'es';
+        const localRecords = storage.records[lang] || [];
+        const personalBest = localRecords.length > 0 ? Math.max(...localRecords.map(r => r.points)) : -1;
+        const beatsLocal = data.score > personalBest;
+        
+        let lowestGlobalTop20 = 0;
+        if (this.currentGlobalRecords && this.currentGlobalRecords.length >= 20) {
+            lowestGlobalTop20 = this.currentGlobalRecords[19].score; // El 20vo puesto (índice 19)
+        }
+        const beatsGlobal = data.score > lowestGlobalTop20;
+
+        const globalCheckbox = document.getElementById('globalRankCheckbox');
+        const checkboxContainer = globalCheckbox.parentElement;
+        
+        if (beatsLocal && beatsGlobal) {
+            checkboxContainer.classList.remove('hidden');
+            checkboxContainer.classList.add('flex');
+            globalCheckbox.checked = true;
+        } else {
+            checkboxContainer.classList.remove('flex');
+            checkboxContainer.classList.add('hidden');
+            globalCheckbox.checked = false;
+        }
+        // ------------------------------------------------------------
         
         this.overlay.classList.remove('opacity-0', 'pointer-events-none');
     }
@@ -284,8 +441,60 @@ class UIManager {
             const div = document.createElement('div');
             div.className = 'flex justify-between items-center text-[10px] bg-slate-50 dark:bg-slate-700 p-1 rounded font-medium text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-600';
             const langAbbr = rec.lang.toUpperCase();
-            div.innerHTML = `<span class="truncate pr-2" title="${rec.alias}">#${i+1} [${langAbbr}] ${rec.alias}</span> <span class="text-indigo-600 dark:text-indigo-400 font-bold shrink-0">${rec.points} pts</span>`;
+            
+            const aliasSpan = document.createElement('span');
+            aliasSpan.className = 'truncate pr-2';
+            aliasSpan.title = rec.alias;
+            aliasSpan.textContent = `#${i+1} [${langAbbr}] ${rec.alias}`;
+            
+            const scoreSpan = document.createElement('span');
+            scoreSpan.className = 'text-indigo-600 dark:text-indigo-400 font-bold shrink-0';
+            scoreSpan.textContent = `${rec.points} pts`;
+            
+            div.appendChild(aliasSpan);
+            div.appendChild(scoreSpan);
             this.recordsContainer.appendChild(div);
+        });
+    }
+
+    renderGlobalRecords(records, userTokenHash) {
+        this.currentGlobalRecords = records || [];
+        this.globalRecordsList.innerHTML = '';
+        if (!records) {
+            this.globalRecordsList.innerHTML = `<span class="text-slate-400 dark:text-slate-500 text-[10px] italic w-full text-center mt-1">Cargando...</span>`;
+            return;
+        }
+
+        if (records.length === 0) {
+            this.globalRecordsList.innerHTML = `<span class="text-slate-400 dark:text-slate-500 text-[10px] italic w-full text-center mt-1">Sin récords globales</span>`;
+            return;
+        }
+
+        records.forEach((rec, i) => {
+            const div = document.createElement('div');
+            div.className = 'flex justify-between items-center text-[10px] bg-slate-50 dark:bg-slate-700 p-1 rounded font-medium border border-slate-200 dark:border-slate-600';
+            
+            if (userTokenHash && rec.hashedToken === userTokenHash) {
+                div.classList.add('ring-1', 'ring-indigo-500', 'bg-indigo-50', 'dark:bg-indigo-900/30');
+            }
+            
+            const aliasSpan = document.createElement('span');
+            aliasSpan.className = 'truncate pr-2';
+            if (userTokenHash && rec.hashedToken === userTokenHash) {
+                aliasSpan.classList.add('text-indigo-700', 'dark:text-indigo-300', 'font-bold');
+            } else {
+                aliasSpan.classList.add('text-slate-600', 'dark:text-slate-300');
+            }
+            aliasSpan.textContent = `#${i+1} ${rec.alias}`;
+            aliasSpan.title = rec.alias;
+
+            const scoreSpan = document.createElement('span');
+            scoreSpan.className = 'text-indigo-600 dark:text-indigo-400 font-bold shrink-0';
+            scoreSpan.textContent = `${rec.score} pts`;
+
+            div.appendChild(aliasSpan);
+            div.appendChild(scoreSpan);
+            this.globalRecordsList.appendChild(div);
         });
     }
 }

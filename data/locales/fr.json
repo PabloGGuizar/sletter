@@ -17,5 +17,12 @@
     "helpTitle": "Comment Jouer",
     "helpText": "<ul class=\"list-disc pl-5 space-y-2\"><li>Déplacez le serpent avec les <b>Flèches</b>, <b>WASD</b>, ou en glissant.</li><li>Mangez des tuiles pour ajouter des lettres à votre <b>queue</b>.</li><li>Formez des mots valides de 3 lettres ou plus se terminant à la pointe de votre queue.</li><li>Appuyez sur <b>Espace</b> (ou le bouton Valider) pour échanger votre mot contre des points et réduire votre taille.</li><li>Si vous mangez une mauvaise lettre, cela <b>bloque</b> votre mot. Vous devez utiliser cette lettre pour former un nouveau mot !</li><li><b>Calcul des Points:</b><ul class=\"list-circle pl-5 mt-1 space-y-1\"><li><b>+1 pt</b> pour chaque tuile mangée.</li><li>Chaque lettre a une <b>valeur de base</b> lors de la validation.</li><li>Les <b>cases multiplicatrices</b> du plateau s'appliquent si vous placez vos lettres dessus lors de la validation. Elles affectent la lettre (<b>x2 L</b>, <b>x3 L</b>) ou le mot entier (<b>x2 M</b>, <b>x3 M</b>).</li><li>Le score total est multiplié selon la <b>longueur</b> du mot (ex. 4 lettres = x2, 5 lettres = x3).</li></ul></li><li><b>Dictionnaires Locaux:</b> Français (336k), Espagnol (636k), Anglais (274k), Galicien (687k), Catalan (891k) et Basque (864k) mots validés.</li></ul>",
     "footer": "&copy; 2026 Sletter &mdash; Développé par <a href='https://www.linkedin.com/in/pablogguizar/' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>Pablo G. Guízar</a>. Open source sous licence MIT disponible sur <a href='https://github.com/s-letter/s-letter.github.io' target='_blank' class='text-indigo-500 hover:text-indigo-400 font-semibold underline'>GitHub</a>.",
-    "recordsTitle": "Meilleurs Records Locaux"
+    "recordsTitle": "Meilleurs Records Locaux",
+    "privacyTitle": "Traitement des données",
+    "privacyText": "<p>En enregistrant votre score mondialement, vous acceptez ce qui suit :</p><ul class=\"list-disc pl-5 space-y-1\"><li>Un <strong>jeton anonyme unique</strong> sera généré sur votre appareil pour mettre à jour votre record sans demander de données personnelles.</li><li>Votre pseudo sera évalué par l'IA <strong>Gemini</strong> de Google pour garantir un environnement sans offense.</li><li>Votre pseudo et votre score seront publics et visibles par tous les joueurs dans le classement.</li></ul>",
+    "publishGlobal": "Publier au classement mondial",
+    "aliasInvalid": "Alias invalide. Lettres, chiffres et _ uniquement.",
+    "aliasTaken": "Cet alias est déjà utilisé mondialement. Choisissez-en un autre.",
+    "saving": "Enregistrement...",
+    "saveError": "Erreur de connexion ou d'enregistrement."
 }

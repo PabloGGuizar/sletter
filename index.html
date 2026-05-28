@@ -67,14 +67,24 @@
                     </p>
                     
                     <div id="aliasContainer" class="hidden flex-col items-center mb-4 sm:mb-6">
-                        <label for="aliasInput" class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-bold uppercase mb-1">Tu Alias</label>
+                        <div class="flex items-center gap-1 mb-1">
+                            <label for="aliasInput" class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 font-bold uppercase">Tu Alias</label>
+                            <button id="privacyInfoBtn" class="text-slate-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors" aria-label="Aviso de tratamiento de datos" title="Información sobre privacidad">
+                                <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            </button>
+                        </div>
                         <div class="flex flex-wrap justify-center gap-2">
-                            <input type="text" id="aliasInput" maxlength="10" placeholder="Anónimo" class="px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-32 text-center font-bold">
+                            <input type="text" id="aliasInput" maxlength="20" pattern="[a-zA-Z0-9_]+" title="Solo letras, números y guión bajo. Sin espacios." placeholder="Anónimo" class="px-3 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-36 text-center font-bold">
                             <div class="flex gap-1">
                                 <button id="saveAliasBtn" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-2 px-3 sm:px-4 rounded-lg shadow-md transition text-sm">Guardar</button>
                                 <button id="skipAliasBtn" class="bg-slate-500 hover:bg-slate-400 text-white font-bold py-2 px-3 sm:px-4 rounded-lg shadow-md transition text-sm">Omitir</button>
                             </div>
                         </div>
+                        <label class="flex items-center gap-2 mt-3 cursor-pointer">
+                            <input type="checkbox" id="globalRankCheckbox" checked class="w-4 h-4 text-indigo-600 bg-slate-100 border-slate-300 rounded focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:ring-offset-slate-800 focus:ring-2 dark:bg-slate-700 dark:border-slate-600">
+                            <span id="lblPublishGlobal" class="text-xs text-slate-600 dark:text-slate-300 font-medium">Publicar en ranking global</span>
+                        </label>
+                        <span id="aliasError" class="text-rose-500 text-[10px] mt-1 hidden font-semibold">Alias inválido. Solo letras, números y _.</span>
                     </div>
 
                     <button id="startBtn" disabled class="opacity-50 cursor-not-allowed bg-gradient-to-r from-indigo-500 to-cyan-500 text-white font-bold py-2 px-6 sm:py-3 sm:px-8 rounded-full shadow-lg transform transition text-base sm:text-lg">
@@ -148,16 +158,32 @@
                 </div>
             </div>
             
-            <!-- Local Records -->
-            <div class="bg-white dark:bg-slate-800 rounded-xl p-2 sm:p-3 border border-slate-300 dark:border-slate-700 shadow-lg flex flex-col shrink-0 transition-colors duration-300">
-                <div class="flex justify-between items-center shrink-0 mb-1">
-                    <h3 id="lblRecordsTitle" class="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 uppercase tracking-widest font-semibold">Top Récords Locales</h3>
+            <!-- Records Panel -->
+            <div class="bg-white dark:bg-slate-800 rounded-xl p-2 sm:p-3 border border-slate-300 dark:border-slate-700 shadow-lg flex flex-col shrink-0 transition-colors duration-300 relative">
+                <!-- Tabs -->
+                <div class="flex items-center justify-between mb-2 border-b border-slate-200 dark:border-slate-700 pb-1">
+                    <div class="flex gap-2">
+                        <button id="tabLocal" class="text-[10px] sm:text-xs uppercase tracking-widest font-bold text-indigo-600 dark:text-indigo-400 border-b-2 border-indigo-600 dark:border-indigo-400 pb-1">Local</button>
+                        <button id="tabGlobal" class="text-[10px] sm:text-xs uppercase tracking-widest font-bold text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 pb-1 transition-colors">Global</button>
+                    </div>
+                    <!-- Actions for Local -->
                     <button id="clearRecordsBtn" class="p-1 text-slate-400 hover:text-rose-500 transition-colors" title="Borrar Récords">
                         <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                     </button>
+                    <!-- Actions for Global -->
+                    <select id="globalLangSelect" class="hidden bg-transparent text-slate-500 dark:text-slate-400 text-[10px] font-bold outline-none cursor-pointer">
+                        <option value="es">ES</option>
+                        <option value="en">EN</option>
+                        <option value="fr">FR</option>
+                        <option value="gl">GL</option>
+                        <option value="ca">CA</option>
+                        <option value="eu">EU</option>
+                    </select>
                 </div>
-                <div id="recordsList" class="flex flex-col gap-1">
-                </div>
+
+                <!-- Lists -->
+                <div id="recordsList" class="flex flex-col gap-1 min-h-[60px]"></div>
+                <div id="globalRecordsList" class="hidden flex-col gap-1 min-h-[60px]"></div>
             </div>
 
             <!-- Footer -->
@@ -179,6 +205,26 @@
             </h2>
             <div id="lblHelpText" class="text-sm text-slate-600 dark:text-slate-300 space-y-3 font-medium">
                 <!-- Inyectado via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Privacy Modal -->
+    <div id="privacyModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex-col items-center justify-center p-4">
+        <div class="bg-white dark:bg-slate-800 rounded-2xl p-6 max-w-md w-full relative shadow-2xl border border-slate-300 dark:border-slate-700 transition-colors duration-300">
+            <button id="closePrivacyBtn" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h2 id="lblPrivacyTitle" class="text-xl font-extrabold mb-4 text-indigo-600 dark:text-indigo-400 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                Tratamiento de Información
+            </h2>
+            <div id="lblPrivacyText" class="text-sm text-slate-600 dark:text-slate-300 space-y-3 font-medium">
+                <p>Al guardar tu puntuación de forma global, aceptas lo siguiente:</p>
+                <ul class="list-disc pl-5 space-y-1">
+                    <li>Se generará un <strong>token anónimo único</strong> en tu dispositivo que nos permitirá actualizar tu récord sin solicitar datos personales.</li>
+                    <li>Tu alias y puntuación serán públicos y visibles para todos los jugadores en la tabla de clasificación.</li>
+                </ul>
             </div>
         </div>
     </div>
