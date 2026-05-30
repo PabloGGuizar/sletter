@@ -3,7 +3,7 @@
 export class APIClient {
     constructor() {
         // El usuario reemplazará esto con su URL de Apps Script (Web App)
-        this.baseUrl = 'https://script.google.com/macros/s/AKfycbzGzJKunJBAI6n9YeB4vM2vDd0uOrfjrhtc4OMxSVfz3F_1sFQj_9nQPDOX6K6vAkVUkQ/exec';
+        this.baseUrl = 'AKfycbyB_Bqn-yRG58NlYQkYFjyCV1PuTr84ahQz9UNUbXhLf9-0TDPUu_9jJHczt8EAzZ7HGg';
     }
 
     async generateSignature(data, token) {
